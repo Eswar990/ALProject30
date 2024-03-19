@@ -1,0 +1,20 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Microsoft cloud sandbox",
+            "request": "launch",
+            "type": "al",
+            "environmentType": "Sandbox",
+            "environmentName": "AzziteTest_07042023",//AzziteTest_07042023 //NewTestDB_20042023
+            "startupObjectId": 22,
+            "startupObjectType": "Page",
+            "breakOnError": "All",
+            "launchBrowser": true,
+            "enableLongRunningSqlStatements": true,
+            "enableSqlInformationDebugger": true,
+            "tenant": "ce522da1-e39a-4b8d-913f-e8252abd1bc5",
+            "schemaUpdateMode": "ForceSync"
+        }
+    ]
+}
