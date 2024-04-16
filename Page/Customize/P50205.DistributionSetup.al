@@ -4,6 +4,7 @@ page 50205 "Distribution Setup"
     Caption = 'Distribution Setup';
     PageType = Card;
     SourceTable = "Distribution Header";
+    // InsertAllowed = false;
     UsageCategory = Tasks;
     layout
     {
@@ -53,7 +54,7 @@ page 50205 "Distribution Setup"
                 Promoted = true;
                 PromotedCategory = Process;
                 Image = CopyBudget;
-                Visible = false;
+                // Visible = false;
                 trigger OnAction()
                 var
                     UserCustManage: Codeunit "User Customize Manage";

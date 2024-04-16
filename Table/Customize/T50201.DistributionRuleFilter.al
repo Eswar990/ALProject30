@@ -184,6 +184,11 @@ table 50201 "Distribution Rule Filter"
         {
             Caption = 'Distribution Amount Five';
         }
+
+        field(53; "Distribution Setup"; Boolean)
+        {
+            Caption = 'Distribution Setup';
+        }
     }
     keys
     {

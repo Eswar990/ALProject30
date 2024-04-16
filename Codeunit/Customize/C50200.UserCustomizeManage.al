@@ -2,6 +2,7 @@ codeunit 50200 "User Customize Manage"
 {
     Permissions = tabledata "G/L Entry" = rm;
     procedure GetFieldCaption(Inx: Integer; FieldNoTxt: Text): Text[100]
+
     var
         GenLedSetup: Record "General Ledger Setup";
         Dim: Record Dimension;
@@ -130,6 +131,8 @@ codeunit 50200 "User Customize Manage"
     var
         DistProject: Record "Distribution Project";
         DimValue: Record "Dimension Value";
+        GLEntry: Record "G/L Entry";
+        GenJrnlDebitedAmount: Boolean;
     begin
         Clear(DistProject);
         DistProject.SetRange("Entry No.", EntryNo);
@@ -144,20 +147,143 @@ codeunit 50200 "User Customize Manage"
         DistProject.SetRange("Shortcut Dimension 2 Code", DimValueCode);
         if DistProject.FindSet() then
             Error('Distribution projects lines exists, please delete projects lines.');
-        DimValue.SetRange("Shortcut Dimension 2 Code", DimValueCode);
-        DimValue.SetRange("Distribute Enable", true);
-        if DimValue.FindSet() then
+
+        if (GLEntry.Get(EntryNo) = false) then
+            exit
+        else
+            if (GLEntry."Debit Amount" <> 0) then begin
+                GenJrnlDebitedAmount := true;
+                DistributionProjectLineInGeneralJournal(EntryNo, DimValueCode, DimValue."Shortcut Dimension 3 Code", GLAccNo, GenJrnlDebitedAmount);
+            end
+            else begin
+                DimValue.SetRange("Shortcut Dimension 2 Code", DimValueCode);
+                DimValue.SetRange("Distribute Enable", true);
+                if DimValue.FindSet() then
+                    repeat
+                        if DimValue."Shortcut Dimension 3 Code" <> '' then
+                            CreateDistProjectValue(EntryNo, DimValueCode, DimValue."Shortcut Dimension 3 Code", GLAccNo);
+                        if DimValue."Shortcut Dimension 3 Two" <> '' then
+                            CreateDistProjectValue(EntryNo, DimValueCode, DimValue."Shortcut Dimension 3 Two", GLAccNo);
+                        if DimValue."Shortcut Dimension 3 Three" <> '' then
+                            CreateDistProjectValue(EntryNo, DimValueCode, DimValue."Shortcut Dimension 3 Three", GLAccNo);
+                    until DimValue.Next() = 0;
+
+            end;
+    end;
+
+    procedure DistributionProjectLineInGeneralJournal(EntryNo: Integer; DimValueCode: Code[20]; xDimValueCode: Code[20]; GLAccNo: code[20]; GenJrnlDebitedAmount: Boolean)
+    var
+        DistributionLine: Record "Distribution Line";
+        // DistributionYear: Text;
+        // DistributionMonth: Text;
+        GLEntry: Record "G/L Entry";
+        DistributionPostingDate: Date;
+        PostingDate: Text;
+        Month: Text;
+        Year: Text;
+    begin
+        // if (GLEntry.Get(EntryNo) = false) then
+        //     exit;
+        // DistributionPostingDate := GLEntry."Posting Date";
+        // PostingDate := Format(DistributionPostingDate);// 01/10/23
+        // Month := CopyStr(PostingDate, 1, 2);
+        // Year := CopyStr(PostingDate, 7, 8);
+        // DistributionYear := InsStr(Year, '20', 1);
+        // DistributionMonth := ConvertingMonthAndYear(Month);
+        CreateDistributionYearAndDate(EntryNo);
+        DistributionLine.SetRange("Shortcut Dimension 2 Code", DimValueCode);
+        if (DistributionLine.FindSet() = true) then
             repeat
-                if DimValue."Shortcut Dimension 3 Code" <> '' then
-                    CreateDistProjectValue(EntryNo, DimValueCode, DimValue."Shortcut Dimension 3 Code", GLAccNo);
-                if DimValue."Shortcut Dimension 3 Two" <> '' then
-                    CreateDistProjectValue(EntryNo, DimValueCode, DimValue."Shortcut Dimension 3 Two", GLAccNo);
-                if DimValue."Shortcut Dimension 3 Three" <> '' then
-                    CreateDistProjectValue(EntryNo, DimValueCode, DimValue."Shortcut Dimension 3 Three", GLAccNo);
-            until DimValue.Next() = 0;
+                if DistributionLine."Shortcut Dimension 3 Code" <> '' then
+                    CreateDistProjectValueGenJournal(EntryNo, DimValueCode, DistributionLine."Shortcut Dimension 3 Code", GLAccNo, DistributionMonth, DistributionYear);
+                if DistributionLine."Shortcut Dimension 3 Two" <> '' then
+                    CreateDistProjectValueGenJournal(EntryNo, DimValueCode, DistributionLine."Shortcut Dimension 3 Two", GLAccNo, DistributionMonth, DistributionYear);
+                if DistributionLine."Shortcut Dimension 3 Three" <> '' then
+                    CreateDistProjectValueGenJournal(EntryNo, DimValueCode, DistributionLine."Shortcut Dimension 3 Three", GLAccNo, DistributionMonth, DistributionYear);
+            until DistributionLine.Next() = 0;
+    end;
+
+    procedure ConvertingMonthAndYear(Month: Text): Text
+    var
+        MonthDataTxt: Text;
+    begin
+        case Month of
+            '01':
+                MonthDataTxt := 'JAN';
+            '02':
+                MonthDataTxt := 'FEB';
+            '03':
+                MonthDataTxt := 'MAR';
+            '04':
+                MonthDataTxt := 'APR';
+            '05':
+                MonthDataTxt := 'MAY';
+            '06':
+                MonthDataTxt := 'JUN';
+            '07':
+                MonthDataTxt := 'JUL';
+            '08':
+                MonthDataTxt := 'AUG';
+            '09':
+                MonthDataTxt := 'SEP';
+            '10':
+                MonthDataTxt := 'OCT';
+            '11':
+                MonthDataTxt := 'NOV';
+            '12':
+                MonthDataTxt := 'DEC';
+        end;
+        exit(MonthDataTxt);
+    end;
+
+    local procedure CreateDistProjectValueGenJournal(EntryNo: Integer; DimValueTwoCode: Code[20]; DimValueThreeCode: Code[20]; GLAccNo: code[20]; MonthText2: Text[20]; yeartext2: Text[20])
+    var
+        DistProject: Record "Distribution Project";
+    begin
+        Clear(DistProject);
+        if DistProject.Get(EntryNo, DimValueThreeCode, DimValueTwoCode) then
+            exit;
+        Clear(DistProject);
+        DistProject."Entry No." := EntryNo;
+        DistProject."Shortcut Dimension 2 Code" := DimValueTwoCode;
+        DistProject."Shortcut Dimension 3 Code" := DimValueThreeCode;
+        DistProject."Emp. Count" := GetEmployeeCountDistributionSetup(DimValueTwoCode, DimValueThreeCode, MonthText2, yeartext2);
+        DistProject."G/L Account No." := GLAccNo;
+        DistProject."Line No." := 0;
+        if (DistProject."Emp. Count" <> 0) then
+            DistProject.Insert();
 
     end;
 
+    local procedure GetEmployeeCountDistributionSetup(DimValueTwoCode: Code[20]; DimValueThreeCode: Code[20]; Month: Text[20]; Year: Text[20]): Integer
+    var
+        Distributionline: Record "Distribution Line";
+        EmpCount: Integer;
+    begin
+        Distributionline.SetRange("Shortcut Dimension 2 Code", DimValueTwoCode);
+        Distributionline.SetRange("Shortcut Dimension 3 Code", DimValueThreeCode);
+        Distributionline.SetRange(Year, Year);
+        Distributionline.SetRange(Month, Month);
+        if (Distributionline.FindFirst() = true) then
+            EmpCount := Distributionline.Count();
+
+        Distributionline.SetRange("Shortcut Dimension 3 Code");
+        Distributionline.SetRange("Shortcut Dimension 2 Code", DimValueTwoCode);
+        Distributionline.SetRange("Shortcut Dimension 3 Two", DimValueThreeCode);
+        Distributionline.SetRange(Year, Year);
+        Distributionline.SetRange(Month, Month);
+        if (Distributionline.FindFirst() = true) then
+            EmpCount += Distributionline.Count();
+
+        Distributionline.SetRange("Shortcut Dimension 3 Two");
+        Distributionline.SetRange("Shortcut Dimension 3 Three", DimValueThreeCode);
+        Distributionline.SetRange(Year, Year);
+        Distributionline.SetRange(Month, Month);
+        if (Distributionline.FindFirst() = true) then
+            EmpCount += Distributionline.Count();
+
+        exit(EmpCount);
+    end;
 
     local procedure CreateDistProjectValue(EntryNo: Integer; DimValueTwoCode: Code[20]; DimValueThreeCode: Code[20]; GLAccNo: code[20])
     var
@@ -397,10 +523,16 @@ codeunit 50200 "User Customize Manage"
     procedure UpdateDistAmountEquallyProporation(var DistRuleFilter: Record "Distribution Rule Filter"; FilterVal: Integer)
     var
         DistProject: Record "Distribution Project";
+        DistributionLine: Record "Distribution Line";
         DistAmount: Decimal;
         DistAmountEquly: Decimal;
         TotEmpCount: Integer;
         Inx: Integer;
+        DistributionLineCountOne: Integer;
+        DistributionLineCountTwo: Integer;
+        DistributionLineCountThree: Integer;
+        DistributionLineCountFour: Integer;
+        DistributionLineCountFive: Integer;
     begin
         DistRuleFilter.TestField("Distrubution Amount");
         DistProject.SetRange("Entry No.", DistRuleFilter."Entry No.");
@@ -414,34 +546,102 @@ codeunit 50200 "User Customize Manage"
             DistProject.SetRange("Shortcut Dimension 2 Code", DistRuleFilter."Dimension Value Four");
         if FilterVal = 5 then
             DistProject.SetRange("Shortcut Dimension 2 Code", DistRuleFilter."Dimension Value Five");
+
+        if (DistRuleFilter."Distrubution Method" = DistRuleFilter."Distrubution Method"::Proportion) then begin
+            CreateDistributionYearAndDate(DistRuleFilter."Entry No.");
+            DistributionLine.Reset();
+            DistributionLine.SetRange(Year, DistributionYear);
+            DistributionLine.SetRange(Month, DistributionMonth);
+            if (FilterVal = 1) then begin
+                DistributionLine.SetRange("Shortcut Dimension 2 Code", DistRuleFilter."Dimension Value One");
+                if (DistributionLine.FindSet() = true) then
+                    repeat
+                        DistributionLineCountOne := DistributionLine.Count();
+                    until DistributionLine.Next() = 0;
+            end;
+            if (FilterVal = 2) then begin
+                DistributionLine.SetRange("Shortcut Dimension 2 Code", DistRuleFilter."Dimension Value Two");
+                if (DistributionLine.FindSet() = true) then
+                    repeat
+                        DistributionLineCountTwo := DistributionLine.Count();
+                    until DistributionLine.Next() = 0;
+            end;
+            if (FilterVal = 3) then begin
+                DistributionLine.SetRange("Shortcut Dimension 2 Code", DistRuleFilter."Dimension Value three");
+                if (DistributionLine.FindSet() = true) then
+                    repeat
+                        DistributionLineCountThree := DistributionLine.Count();
+                    until DistributionLine.Next() = 0;
+            end;
+            if (FilterVal = 4) then begin
+                DistributionLine.SetRange("Shortcut Dimension 2 Code", DistRuleFilter."Dimension Value four");
+                if (DistributionLine.FindSet() = true) then
+                    repeat
+                        DistributionLineCountFour := DistributionLine.Count();
+                    until DistributionLine.Next() = 0;
+            end;
+            if (FilterVal = 5) then begin
+                DistributionLine.SetRange("Shortcut Dimension 2 Code", DistRuleFilter."Dimension Value five");
+                if (DistributionLine.FindSet() = true) then
+                    repeat
+                        DistributionLineCountFive := DistributionLine.Count();
+                    until DistributionLine.Next() = 0;
+            end;
+        end;
         DistProject.CalcSums("Emp. Count");
         TotEmpCount := DistProject."Emp. Count";
         Inx := DistProject.Count();
         if not DistProject.FindSet() then
             exit;
+
         if TotEmpCount = 0 then
             exit;
+
         if FilterVal = 0 then begin
             DistAmount := DistRuleFilter."Distrubution Amount";
             DistAmountEquly := Round(DistAmount / TotEmpCount, 0.01);
         end;
-        if FilterVal = 1 then begin
+
+        if ((FilterVal = 1) and (DistRuleFilter."Distrubution Method" = DistRuleFilter."Distrubution Method"::Proportion)) then begin
+            DistAmount := DistRuleFilter."Distrubution Amount One";
+            DistAmountEquly := Round(DistAmount / DistributionLineCountOne, 0.01);
+        end
+        else begin
             DistAmount := DistRuleFilter."Distrubution Amount One";
             DistAmountEquly := Round(DistAmount / TotEmpCount, 0.01);
         end;
-        if FilterVal = 2 then begin
+
+        if ((FilterVal = 2) and (DistRuleFilter."Distrubution Method" = DistRuleFilter."Distrubution Method"::Proportion)) then begin
             DistAmount := DistRuleFilter."Distrubution Amount Two";
+            DistAmountEquly := Round(DistAmount / DistributionLineCountTwo, 0.01);
+        end
+        else begin
+            DistAmount := DistRuleFilter."Distrubution Amount two";
             DistAmountEquly := Round(DistAmount / TotEmpCount, 0.01);
         end;
-        if FilterVal = 3 then begin
+
+        if ((FilterVal = 3) and (DistRuleFilter."Distrubution Method" = DistRuleFilter."Distrubution Method"::Proportion)) then begin
+            DistAmount := DistRuleFilter."Distrubution Amount Three";
+            DistAmountEquly := Round(DistAmount / DistributionLineCountThree, 0.01);
+        end
+        else begin
             DistAmount := DistRuleFilter."Distrubution Amount Three";
             DistAmountEquly := Round(DistAmount / TotEmpCount, 0.01);
         end;
-        if FilterVal = 4 then begin
+
+        if ((FilterVal = 4) and (DistRuleFilter."Distrubution Method" = DistRuleFilter."Distrubution Method"::Proportion)) then begin
+            DistAmount := DistRuleFilter."Distrubution Amount Four";
+            DistAmountEquly := Round(DistAmount / DistributionLineCountFour, 0.01);
+        end else begin
             DistAmount := DistRuleFilter."Distrubution Amount Four";
             DistAmountEquly := Round(DistAmount / TotEmpCount, 0.01);
         end;
-        if FilterVal = 5 then begin
+
+        if ((FilterVal = 5) and (DistRuleFilter."Distrubution Method" = DistRuleFilter."Distrubution Method"::Proportion)) then begin
+            DistAmount := DistRuleFilter."Distrubution Amount Five";
+            DistAmountEquly := Round(DistAmount / DistributionLineCountFive, 0.01);
+        end
+        else begin
             DistAmount := DistRuleFilter."Distrubution Amount Five";
             DistAmountEquly := Round(DistAmount / TotEmpCount, 0.01);
         end;
@@ -729,4 +929,27 @@ codeunit 50200 "User Customize Manage"
         end;
         Message('Excel update process completed.');
     end;
+
+    procedure CreateDistributionYearAndDate(EntryNo: Integer)
+    var
+        DistributionLine: Record "Distribution Line";
+        GLEntry: Record "G/L Entry";
+        DistributionPostingDate: Date;
+        PostingDate: Text;
+        Month: Text;
+        Year: Text;
+    begin
+        if (GLEntry.Get(EntryNo) = false) then
+            exit;
+        DistributionPostingDate := GLEntry."Posting Date";
+        PostingDate := Format(DistributionPostingDate);// 01/10/23
+        Month := CopyStr(PostingDate, 1, 2);
+        Year := CopyStr(PostingDate, 7, 8);
+        DistributionYear := InsStr(Year, '20', 1);
+        DistributionMonth := ConvertingMonthAndYear(Month);
+    end;
+
+    var
+        DistributionYear: Text;
+        DistributionMonth: Text;
 }
