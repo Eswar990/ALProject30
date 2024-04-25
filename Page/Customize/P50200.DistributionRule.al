@@ -4,7 +4,7 @@ page 50200 "Distribution Rule"
     Caption = 'Distribution Rule';
     PageType = ListPart;
     SourceTable = "Distribution Rule";
-    SourceTableView = sorting("Shortcut Dimension 3 Code");
+    SourceTableView = sorting("Entry No.", "Line No.");
     DelayedInsert = true;
     AutoSplitKey = true;
     MultipleNewLines = true;
@@ -166,7 +166,7 @@ page 50200 "Distribution Rule"
         ProjAmount := DistProject."Project Amount";
         Clear(DistRule);
         DistRule.SetRange("Entry No.", Rec."Entry No.");
-        DistRule.SetRange("Shortcut Dimension 3 Code", Rec."Shortcut Dimension 3 Code");
+        DistRule.SetRange("Shortcut Dimension 1 Code", Rec."Shortcut Dimension 3 Code");
         DistRule.FindSet();
         repeat
             if DistRule."Line No." <> Rec."Line No." then

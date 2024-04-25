@@ -107,9 +107,15 @@ table 50201 "Distribution Rule Filter"
             var
                 UserCustManage: Codeunit "User Customize Manage";
             begin
-                if "Dimension Value One" = '' then
-                    "Distrubution Amount One" := 0;
-                UserCustManage.CreateProjectDistRuleFilter(Rec."Entry No.", Rec."Dimension Value One", xRec."Dimension Value One", Rec."G/L Account No.");
+                if ("Distribution Setup" = true) then begin
+                    /* In this Dimension Will give only Respected Dimension Values*/
+                    if ("Dimension Value One" <> '') then
+                        UserCustManage.CreateProjectDistFromDistributionLine(Rec."Entry No.", Rec."Dimension Value One", xRec."Dimension Value One", Rec."G/L Account No.");
+                end else begin
+                    if "Dimension Value One" = '' then
+                        "Distrubution Amount One" := 0;
+                    UserCustManage.CreateProjectDistRuleFilter(Rec."Entry No.", Rec."Dimension Value One", xRec."Dimension Value One", Rec."G/L Account No.");
+                end;
             end;
         }
         field(33; "Distrubution Amount One"; Decimal)
