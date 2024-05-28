@@ -72,6 +72,8 @@ table 50200 "Distribution Rule"
             begin
                 DisRuleFilter.Get(Rec."Entry No.");
                 DisRuleFilter.TestField("Distrubution Method", DisRuleFilter."Distrubution Method"::Manually);
+                if (DisRuleFilter."Dist Single Line Amount" = true) then
+                    exit;
                 Rec.TestField("Shortcut Dimension 1 Code");
             end;
         }

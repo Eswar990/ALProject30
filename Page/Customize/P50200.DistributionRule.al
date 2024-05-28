@@ -44,8 +44,27 @@ page 50200 "Distribution Rule"
                 {
                     ToolTip = 'Specifies the value of the Amount Allocated field.';
                     trigger OnValidate()
+                    var
+                        GLEntry: Record "G/L Entry";
+                        DistributionRuleFilter: Record "Distribution Rule Filter";
                     begin
-                        CheckingAllocation();
+                        if (GLEntry.Get(Rec."Entry No.") = false) then
+                            exit;
+
+                        if (DistributionRuleFilter.Get(Rec."Entry No.") = false) then
+                            exit;
+
+                        if (DistributionRuleFilter."Dist Single Line Amount" = true) then begin
+                            CalculateEachLineReminingAmount(GLEntry);
+                        end else begin
+                            CheckingAllocation();
+                            CalRemAmount(GLEntry);
+                        end;
+
+                        if RemAmount = 0 then
+                            UserCustomizedmanage.UpdateGLEntryApplied(GLEntry."Document No.", DistributionRuleFilter."Dimension Value",
+                                 GLEntry."Global Dimension 1 Code", DistributionRuleFilter."G/L Account No.");
+                        CurrPage.Update(true);
                     end;
                 }
                 field("G/L Account No."; Rec."G/L Account No.")
@@ -55,10 +74,12 @@ page 50200 "Distribution Rule"
                 field("Entry No."; Rec."Entry No.")
                 {
                     ToolTip = 'Specifies the value of the Entry No. field.';
+                    Editable = false;
                 }
                 field("Line No."; Rec."Line No.")
                 {
-
+                    ToolTip = 'Specifies the value of the Line No. field.';
+                    Editable = false;
                 }
             }
             group("Allocation Details")
@@ -86,28 +107,28 @@ page 50200 "Distribution Rule"
     {
         area(Processing)
         {
-            action("Allocation Amount Upload")
+            action("Allocation Project Amount Upload")
             {
                 ApplicationArea = All;
                 Image = UpdateXML;
                 trigger OnAction()
                 var
                     DisRuleFilter: Record "Distribution Rule Filter";
-                    DistRule: Record "Distribution Rule";
+                    AzzDistributionRule: Record "Distribution Rule";
+                    Distributionproject: Record "Distribution Project";
                     GLEntry: Record "G/L Entry";
-                    UserCustManage: Codeunit "User Customize Manage";
                 begin
-                    DistRule.Copy(Rec);
-                    UserCustManage.UploadDistributionRuleFromExcel(DistRule);
+                    AzzDistributionRule.Copy(Rec);
+                    UserCustomizedmanage.UploadDistributionRuleFromExcel(AzzDistributionRule);
                     DisRuleFilter.Get(Rec."Entry No.");
                     GLEntry.Get(Rec."Entry No.");
                     CalRemAmount(GLEntry);
                     if RemAmount = 0 then
-                        UserCustManage.UpdateGLEntryApplied(GLEntry."Document No.", DisRuleFilter."Dimension Value",
+                        UserCustomizedmanage.UpdateGLEntryApplied(GLEntry."Document No.", DisRuleFilter."Dimension Value",
                              GLEntry."Global Dimension 1 Code", DisRuleFilter."G/L Account No.");
+
                     CurrPage.Update(true);
                 end;
-
             }
         }
     }
@@ -118,6 +139,7 @@ page 50200 "Distribution Rule"
 
     trigger OnAfterGetCurrRecord()
     begin
+
     end;
 
     trigger OnDeleteRecord(): Boolean
@@ -126,10 +148,13 @@ page 50200 "Distribution Rule"
         CurrPage.Update(true);
     end;
 
-    var
-        Amount: Decimal;
-        RemAmount: Decimal;
-        AmountAlloEdit: Boolean;
+    procedure UpdateAmount(PassAmt: Decimal; PassRemAmt: Decimal)
+    begin
+        Amount := PassAmt;
+        RemAmount := PassRemAmt;
+        CurrPage.Update(true);
+    end;
+
 
     local procedure InitPageDetails(var GLEntry: Record "G/L Entry")
     begin
@@ -139,12 +164,30 @@ page 50200 "Distribution Rule"
 
     local procedure CalRemAmount(GLEntry: Record "G/L Entry")
     var
-        DisRule: Record "Distribution Rule";
+        DistributionRule: Record "Distribution Rule";
+        DistributionProject: Record "Distribution Project";
     begin
-        Clear(DisRule);
-        DisRule.SetRange("Entry No.", GLEntry."Entry No.");
-        DisRule.CalcSums("Amount Allocated");
-        RemAmount := Amount - DisRule."Amount Allocated";
+        Clear(DistributionProject);
+        DistributionProject.SetRange("Entry No.", GLEntry."Entry No.");
+        DistributionProject.CalcSums("Project Amount");
+        Amount := DistributionProject."Project Amount";
+        Clear(DistributionRule);
+        DistributionRule.SetRange("Entry No.", GLEntry."Entry No.");
+        DistributionRule.CalcSums("Amount Allocated");
+        RemAmount := Amount - DistributionRule."Amount Allocated";
+    end;
+
+    local procedure CalculateEachLineReminingAmount(GLEntry: Record "G/L Entry")
+    var
+        DistributionRule: Record "Distribution Rule";
+        DistributionProject: Record "Distribution Project";
+    begin
+        Clear(DistributionProject);
+        DistributionProject.SetRange("Entry No.", GLEntry."Entry No.");
+        DistributionProject.CalcSums("Project Amount");
+        Amount := DistributionProject."Project Amount";
+        DistributionRuleAmount += Rec."Amount Allocated";
+        RemAmount := Amount - DistributionRuleAmount;
     end;
 
     local procedure CheckingAllocation()
@@ -162,11 +205,12 @@ page 50200 "Distribution Rule"
             if Rec."Amount Allocated" < 0 then
                 Error('Allocated amount be positive.');
         end;
-        DistProject.Get(Rec."Entry No.", Rec."Shortcut Dimension 3 Code", Rec."Shortcut Dimension 2 Code");
+
+        DistProject.Get(Rec."Entry No.", Rec."Shortcut Dimension 1 Code", Rec."Shortcut Dimension 2 Code");
         ProjAmount := DistProject."Project Amount";
         Clear(DistRule);
         DistRule.SetRange("Entry No.", Rec."Entry No.");
-        DistRule.SetRange("Shortcut Dimension 1 Code", Rec."Shortcut Dimension 3 Code");
+        DistRule.SetRange("Shortcut Dimension 1 Code", Rec."Shortcut Dimension 1 Code");
         DistRule.FindSet();
         repeat
             if DistRule."Line No." <> Rec."Line No." then
@@ -174,6 +218,10 @@ page 50200 "Distribution Rule"
             else
                 ProjAmount := ProjAmount - Rec."Amount Allocated";
         until DistRule.Next() = 0;
+
+        if (DistRuleFilter."Sales Invoice" = true) then
+            exit;
+
         if DistRuleFilter."Negative Allocation" then begin
             if ProjAmount > 0 then
                 Error('Project amount %1 exceeded by %2.', DistProject."Project Amount", Abs(ProjAmount));
@@ -182,8 +230,10 @@ page 50200 "Distribution Rule"
             if ProjAmount < 0 then
                 Error('Project amount %1 exceeded by %2.', DistProject."Project Amount", Abs(ProjAmount));
         end;
+
         if Abs(Rec."Amount Allocated") > Abs(RemAmount) then
             Error('Amount to be allocate is %1', RemAmount);
+
         if Rec."Amount Allocated" <> 0 then
             RemAmount := RemAmount - Rec."Amount Allocated"
         else
@@ -191,10 +241,10 @@ page 50200 "Distribution Rule"
         CurrPage.Update(true);
     end;
 
-    procedure UpdateAmount(PassAmt: Decimal; PassRemAmt: Decimal)
-    begin
-        Amount := PassAmt;
-        RemAmount := PassRemAmt;
-        CurrPage.Update(true);
-    end;
+    var
+        UserCustomizedmanage: Codeunit "User Customize Manage";
+        Amount: Decimal;
+        RemAmount: Decimal;
+        DistributionRuleAmount: Decimal;
+        AmountAlloEdit: Boolean;
 }

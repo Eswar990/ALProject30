@@ -64,35 +64,14 @@ table 50205 "Distribution Line"
         field(9; "Percentage One"; Decimal)
         {
             Caption = 'Percentage One';
-            trigger OnValidate()
-            var
-                myInt: Integer;
-            begin
-                if (Rec."Percentage One" > 100) and ((Rec."Percentage One" + Rec."Percentage Two" + Rec."Percentage Three") > 100) then
-                    Error('Percentage value must be equal to 100');
-            end;
         }
         field(10; "Percentage Two"; Decimal)
         {
             Caption = 'Percentage Two';
-            trigger OnValidate()
-            var
-                myInt: Integer;
-            begin
-                if (Rec."Percentage Two" > 100) and ((Rec."Percentage One" + Rec."Percentage Two" + Rec."Percentage Three") > 100) then
-                    Error('Percentage value must be equal to 100');
-            end;
         }
         field(11; "Percentage Three"; Decimal)
         {
             Caption = 'Percentage Three';
-            trigger OnValidate()
-            var
-                myInt: Integer;
-            begin
-                if (Rec."Percentage Three" > 100) and ((Rec."Percentage One" + Rec."Percentage Two" + Rec."Percentage Three") > 100) then
-                    Error('Percentage value must be equal to 100');
-            end;
         }
     }
     keys

@@ -110,6 +110,7 @@ page 50208 "Distribution Entries"
                     Clear(AppAssEntryNo);
                     if Rec.Amount = 0 then
                         exit;
+
                     if Rec."Dist. Entry No Applied" = 0 then begin
                         AssEntryNo := Rec."Entry No.";
                         AppAssEntryNo := true;
