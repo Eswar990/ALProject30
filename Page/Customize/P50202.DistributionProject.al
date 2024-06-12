@@ -82,20 +82,20 @@ page 50202 "Distribution Project"
                     DistributionProject.Copy(Rec);
                     If (DisRuleFilter.Get(Rec."Entry No.") = false) then
                         exit;
-                    if ((DisRuleFilter."Dimension Value One" <> '') and (DisRuleFilter."Distrubution Amount One" = 0)) then
-                        Error('Distrubution Amount One %1 Must not be Zero Please add Value', DisRuleFilter."Distrubution Amount One")
+                    if ((DisRuleFilter."Dimension Value One" <> '') and (DisRuleFilter."Distribution Amount One" = 0)) then
+                        Error('Distribution Amount One %1 Must not be Zero Please add Value', DisRuleFilter."Distribution Amount One")
                     else
-                        if ((DisRuleFilter."Dimension Value Two" <> '') and (DisRuleFilter."Distrubution Amount Two" = 0)) then
-                            Error('Distrubution Amount Two %1 Must not be Zero Please add Value', DisRuleFilter."Distrubution Amount Two")
+                        if ((DisRuleFilter."Dimension Value Two" <> '') and (DisRuleFilter."Distribution Amount Two" = 0)) then
+                            Error('Distribution Amount Two %1 Must not be Zero Please add Value', DisRuleFilter."Distribution Amount Two")
                         else
-                            if ((DisRuleFilter."Dimension Value Three" <> '') and (DisRuleFilter."Distrubution Amount Three" = 0)) then
-                                Error('Distrubution Amount Three %1 Must not be Zero Please add Value', DisRuleFilter."Distrubution Amount Three")
+                            if ((DisRuleFilter."Dimension Value Three" <> '') and (DisRuleFilter."Distribution Amount Three" = 0)) then
+                                Error('Distribution Amount Three %1 Must not be Zero Please add Value', DisRuleFilter."Distribution Amount Three")
                             else
-                                if ((DisRuleFilter."Dimension Value Four" <> '') and (DisRuleFilter."Distrubution Amount Four" = 0)) then
-                                    Error('Distrubution Amount Four %1 Must not be Zero Please add Value', DisRuleFilter."Distrubution Amount Four")
+                                if ((DisRuleFilter."Dimension Value Four" <> '') and (DisRuleFilter."Distribution Amount Four" = 0)) then
+                                    Error('Distribution Amount Four %1 Must not be Zero Please add Value', DisRuleFilter."Distribution Amount Four")
                                 else
-                                    if ((DisRuleFilter."Dimension Value Five" <> '') and (DisRuleFilter."Distrubution Amount Five" = 0)) then
-                                        Error('Distrubution Amount Five %1 Must not be Zero Please add Value', DisRuleFilter."Distrubution Amount Five")
+                                    if ((DisRuleFilter."Dimension Value Five" <> '') and (DisRuleFilter."Distribution Amount Five" = 0)) then
+                                        Error('Distribution Amount Five %1 Must not be Zero Please add Value', DisRuleFilter."Distribution Amount Five")
                                     else
                                         UserCustManage.UploadDistributionProjectFromExcel(DistributionProject);
 

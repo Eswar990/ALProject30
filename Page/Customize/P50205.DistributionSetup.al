@@ -4,7 +4,7 @@ page 50205 "Distribution Setup"
     Caption = 'Distribution Setup';
     PageType = Card;
     SourceTable = "Distribution Header";
-    // InsertAllowed = false;
+    InsertAllowed = false;
     UsageCategory = Tasks;
     layout
     {

@@ -248,7 +248,7 @@ codeunit 50200 "User Customize Manage"
                 DistributionProject."Shortcut Dimension 2 Code" := DistributionLine."Shortcut Dimension 2 Code";
                 DistributionProject."Shortcut Dimension 3 Code" := DistributionLine."Shortcut Dimension 1 Code";
                 if (Integer = 0) then
-                    DistributionProject."Project Amount" := Round(DistributionRuleFilter."Distrubution Amount" / EmployeeCount, 0.01);
+                    DistributionProject."Project Amount" := Round(DistributionRuleFilter."Distribution Amount" / EmployeeCount, 0.01);
 
                 DistributionProject."Project Line" := true;
                 DistributionProject."Line No." := DistributionProjectLineNo + 1000;
@@ -315,127 +315,127 @@ codeunit 50200 "User Customize Manage"
         DistributionProject.SetRange("Entry No.", GLEntryNo);
         if (DistributionProject.FindSet(false) = true) then
             repeat
-                DistributionProject."Project Amount" := Round(DistributionRuleFilter."Distrubution Amount" / EmployeeCount2, 0.01);
+                DistributionProject."Project Amount" := Round(DistributionRuleFilter."Distribution Amount" / EmployeeCount2, 0.01);
                 DistributionProject.Modify(false);
             until DistributionProject.Next() = 0;
 
-        if ((DistributionRuleFilter."Distrubution Amount One" = 0) and (DistributionRuleFilter."Dimension Value One" <> '')) then begin
+        if ((DistributionRuleFilter."Distribution Amount One" = 0) and (DistributionRuleFilter."Dimension Value One" <> '')) then begin
             DistributionProject.SetRange("Shortcut Dimension 2 Code", DistributionRuleFilter."Dimension Value One");
             Clear(DistributionProjectAmount);
             if (DistributionProject.FindSet(false) = true) then
                 repeat
                     DistributionProjectAmount += DistributionProject."Project Amount";
                 until DistributionProject.Next() = 0;
-            DistributionRuleFilter."Distrubution Amount One" := DistributionProjectAmount;
+            DistributionRuleFilter."Distribution Amount One" := DistributionProjectAmount;
             DistributionRuleFilter.Modify(false);
         end;
 
-        if ((DistributionRuleFilter."Distrubution Amount Two" = 0) and (DistributionRuleFilter."Dimension Value Two" <> '')) then begin
+        if ((DistributionRuleFilter."Distribution Amount Two" = 0) and (DistributionRuleFilter."Dimension Value Two" <> '')) then begin
             DistributionProject.SetRange("Shortcut Dimension 2 Code", DistributionRuleFilter."Dimension Value Two");
             Clear(DistributionProjectAmount);
             if (DistributionProject.FindSet(false) = true) then
                 repeat
                     DistributionProjectAmount += DistributionProject."Project Amount";
                 until DistributionProject.Next() = 0;
-            DistributionRuleFilter."Distrubution Amount Two" := DistributionProjectAmount;
+            DistributionRuleFilter."Distribution Amount Two" := DistributionProjectAmount;
             DistributionProject.SetRange("Shortcut Dimension 2 Code", DistributionRuleFilter."Dimension Value One");
             if (DistributionProject.FindSet(false) = true) then
-                Clear(DistributionRuleFilter."Distrubution Amount One");
+                Clear(DistributionRuleFilter."Distribution Amount One");
             repeat
-                DistributionRuleFilter."Distrubution Amount One" += DistributionProject."Project Amount";
+                DistributionRuleFilter."Distribution Amount One" += DistributionProject."Project Amount";
             until DistributionProject.Next() = 0;
             DistributionRuleFilter.Modify(false);
         end;
 
-        if ((DistributionRuleFilter."Distrubution Amount Three" = 0) and (DistributionRuleFilter."Dimension Value Three" <> '')) then begin
+        if ((DistributionRuleFilter."Distribution Amount Three" = 0) and (DistributionRuleFilter."Dimension Value Three" <> '')) then begin
             DistributionProject.SetRange("Shortcut Dimension 2 Code", DistributionRuleFilter."Dimension Value Three");
             Clear(DistributionProjectAmount);
             if (DistributionProject.FindSet(false) = true) then
                 repeat
                     DistributionProjectAmount += DistributionProject."Project Amount";
                 until DistributionProject.Next() = 0;
-            DistributionRuleFilter."Distrubution Amount Three" := DistributionProjectAmount;
+            DistributionRuleFilter."Distribution Amount Three" := DistributionProjectAmount;
             DistributionProject.SetRange("Shortcut Dimension 2 Code", DistributionRuleFilter."Dimension Value One");
             if (DistributionProject.FindSet(false) = true) then
-                Clear(DistributionRuleFilter."Distrubution Amount One");
+                Clear(DistributionRuleFilter."Distribution Amount One");
             repeat
-                DistributionRuleFilter."Distrubution Amount One" += DistributionProject."Project Amount";
+                DistributionRuleFilter."Distribution Amount One" += DistributionProject."Project Amount";
             until DistributionProject.Next() = 0;
 
             DistributionProject.SetRange("Shortcut Dimension 2 Code", DistributionRuleFilter."Dimension Value Two");
             if (DistributionProject.FindSet(false) = true) then
-                Clear(DistributionRuleFilter."Distrubution Amount Two");
+                Clear(DistributionRuleFilter."Distribution Amount Two");
             repeat
-                DistributionRuleFilter."Distrubution Amount Two" += DistributionProject."Project Amount";
+                DistributionRuleFilter."Distribution Amount Two" += DistributionProject."Project Amount";
             until DistributionProject.Next() = 0;
             DistributionRuleFilter.Modify(false);
         end;
 
-        if ((DistributionRuleFilter."Distrubution Amount Four" = 0) and (DistributionRuleFilter."Dimension Value Four" <> '')) then begin
+        if ((DistributionRuleFilter."Distribution Amount Four" = 0) and (DistributionRuleFilter."Dimension Value Four" <> '')) then begin
             DistributionProject.SetRange("Shortcut Dimension 2 Code", DistributionRuleFilter."Dimension Value Four");
             Clear(DistributionProjectAmount);
             if (DistributionProject.FindSet(false) = true) then
                 repeat
                     DistributionProjectAmount += DistributionProject."Project Amount";
                 until DistributionProject.Next() = 0;
-            DistributionRuleFilter."Distrubution Amount Four" := DistributionProjectAmount;
+            DistributionRuleFilter."Distribution Amount Four" := DistributionProjectAmount;
             DistributionProject.SetRange("Shortcut Dimension 2 Code", DistributionRuleFilter."Dimension Value One");
             if (DistributionProject.FindSet(false) = true) then
-                Clear(DistributionRuleFilter."Distrubution Amount One");
+                Clear(DistributionRuleFilter."Distribution Amount One");
             repeat
-                DistributionRuleFilter."Distrubution Amount One" += DistributionProject."Project Amount";
+                DistributionRuleFilter."Distribution Amount One" += DistributionProject."Project Amount";
             until DistributionProject.Next() = 0;
 
             DistributionProject.SetRange("Shortcut Dimension 2 Code", DistributionRuleFilter."Dimension Value Two");
             if (DistributionProject.FindSet(false) = true) then
-                Clear(DistributionRuleFilter."Distrubution Amount Two");
+                Clear(DistributionRuleFilter."Distribution Amount Two");
             repeat
-                DistributionRuleFilter."Distrubution Amount Two" += DistributionProject."Project Amount";
+                DistributionRuleFilter."Distribution Amount Two" += DistributionProject."Project Amount";
             until DistributionProject.Next() = 0;
 
             DistributionProject.SetRange("Shortcut Dimension 2 Code", DistributionRuleFilter."Dimension Value Three");
             if (DistributionProject.FindSet(false) = true) then
-                Clear(DistributionRuleFilter."Distrubution Amount Three");
+                Clear(DistributionRuleFilter."Distribution Amount Three");
             repeat
-                DistributionRuleFilter."Distrubution Amount Three" += DistributionProject."Project Amount";
+                DistributionRuleFilter."Distribution Amount Three" += DistributionProject."Project Amount";
             until DistributionProject.Next() = 0;
             DistributionRuleFilter.Modify(false);
         end;
 
-        if ((DistributionRuleFilter."Distrubution Amount Five" = 0) and (DistributionRuleFilter."Dimension Value Five" <> '')) then begin
+        if ((DistributionRuleFilter."Distribution Amount Five" = 0) and (DistributionRuleFilter."Dimension Value Five" <> '')) then begin
             DistributionProject.SetRange("Shortcut Dimension 2 Code", DistributionRuleFilter."Dimension Value Five");
             Clear(DistributionProjectAmount);
             if (DistributionProject.FindSet(false) = true) then
                 repeat
                     DistributionProjectAmount += DistributionProject."Project Amount";
                 until DistributionProject.Next() = 0;
-            DistributionRuleFilter."Distrubution Amount Five" := DistributionProjectAmount;
+            DistributionRuleFilter."Distribution Amount Five" := DistributionProjectAmount;
             DistributionProject.SetRange("Shortcut Dimension 2 Code", DistributionRuleFilter."Dimension Value One");
             if (DistributionProject.FindSet(false) = true) then
-                Clear(DistributionRuleFilter."Distrubution Amount One");
+                Clear(DistributionRuleFilter."Distribution Amount One");
             repeat
-                DistributionRuleFilter."Distrubution Amount One" += DistributionProject."Project Amount";
+                DistributionRuleFilter."Distribution Amount One" += DistributionProject."Project Amount";
             until DistributionProject.Next() = 0;
 
             DistributionProject.SetRange("Shortcut Dimension 2 Code", DistributionRuleFilter."Dimension Value Two");
             if (DistributionProject.FindSet(false) = true) then
-                Clear(DistributionRuleFilter."Distrubution Amount Two");
+                Clear(DistributionRuleFilter."Distribution Amount Two");
             repeat
-                DistributionRuleFilter."Distrubution Amount Two" += DistributionProject."Project Amount";
+                DistributionRuleFilter."Distribution Amount Two" += DistributionProject."Project Amount";
             until DistributionProject.Next() = 0;
 
             DistributionProject.SetRange("Shortcut Dimension 2 Code", DistributionRuleFilter."Dimension Value Three");
             if (DistributionProject.FindSet(false) = true) then
-                Clear(DistributionRuleFilter."Distrubution Amount Three");
+                Clear(DistributionRuleFilter."Distribution Amount Three");
             repeat
-                DistributionRuleFilter."Distrubution Amount Three" += DistributionProject."Project Amount";
+                DistributionRuleFilter."Distribution Amount Three" += DistributionProject."Project Amount";
             until DistributionProject.Next() = 0;
 
             DistributionProject.SetRange("Shortcut Dimension 2 Code", DistributionRuleFilter."Dimension Value Four");
             if (DistributionProject.FindSet(false) = true) then
-                Clear(DistributionRuleFilter."Distrubution Amount Four");
+                Clear(DistributionRuleFilter."Distribution Amount Four");
             repeat
-                DistributionRuleFilter."Distrubution Amount Four" += DistributionProject."Project Amount";
+                DistributionRuleFilter."Distribution Amount Four" += DistributionProject."Project Amount";
             until DistributionProject.Next() = 0;
             DistributionRuleFilter.Modify(false);
         end;
@@ -637,7 +637,7 @@ codeunit 50200 "User Customize Manage"
             until DistributionProject.Next() = 0;
     end;
 
-    procedure UploadDistributionProjectFromExcel(var DistributionProject: Record "Distribution Project")
+    procedure UploadDistributionProjectFromExcel(DistributionProject: Record "Distribution Project")
     var
         DistRuleFilter: Record "Distribution Rule Filter";
         TempExcelBuffer: Record "Excel Buffer" temporary;
@@ -658,6 +658,7 @@ codeunit 50200 "User Customize Manage"
         AddDimensionValue: Decimal;
         SubDimensionValue: Decimal;
         EmployeeCode: Code[20];
+        EmployeeCodeTxt: Text;
         EntryNo: Integer;
         LineNo: Integer;
         MaxRowCount: Integer;
@@ -692,6 +693,11 @@ codeunit 50200 "User Customize Manage"
             Evaluate(LineNo, GetValueAtCell(TempExcelBuffer, RowCount, 7));
             DistributionProject.SetRange("Line No.", LineNo);
             Evaluate(EmployeeCode, GetValueAtCell(TempExcelBuffer, RowCount, 3));
+            if (EmployeeCodeTxt = '') then
+                EmployeeCodeTxt := EmployeeCode
+            else
+                EmployeeCodeTxt += '|' + EmployeeCode;
+
             DistributionProject.SetRange("Shortcut Dimension 3 Code", EmployeeCode);
             if not DistributionProject.FindFirst() then
                 Error('Line entry not found entry no %1 line no %2.', EntryNo, LineNo);
@@ -702,26 +708,29 @@ codeunit 50200 "User Customize Manage"
             else
                 DistributionProject.Validate("Project Amount", SheetVal);
             DistributionProject.Modify(false);
+            Commit();
         end;
-        DistributionProject.Reset();
-        DimensionTotalAmount := ((DistRuleFilter."Distrubution Amount One") + (DistRuleFilter."Distrubution Amount Two") + (DistRuleFilter."Distrubution Amount Three") + (DistRuleFilter."Distrubution Amount Four") + (DistRuleFilter."Distrubution Amount Five"));
-        if (DimensionTotalAmount <> DistRuleFilter."Distrubution Amount") then
+
+        DimensionTotalAmount := ((DistRuleFilter."Distribution Amount One") + (DistRuleFilter."Distribution Amount Two") + (DistRuleFilter."Distribution Amount Three") + (DistRuleFilter."Distribution Amount Four") + (DistRuleFilter."Distribution Amount Five"));
+        if (DimensionTotalAmount <> DistRuleFilter."Distribution Amount") then
             Error('Dimensions Total Amount Must be equal to Distribution Amount');
 
         if (DistRuleFilter."Dimension Value One" <> '') then begin
+            DistributionProject.Reset();
             DistributionProject.SetRange("Entry No.", EntryNo);
             DistributionProject.SetRange("Shortcut Dimension 2 Code", DistRuleFilter."Dimension Value One");
+            // DistributionProject.SetFilter("Shortcut Dimension 3 Code", EmployeeCodeTxt);
             if (DistributionProject.FindSet(false) = true) then
                 repeat
                     DimensionAmountOne += DistributionProject."Project Amount";
                 until DistributionProject.Next() = 0;
 
-            if (DimensionAmountOne <> DistRuleFilter."Distrubution Amount One") then begin
+            if (DimensionAmountOne <> DistRuleFilter."Distribution Amount One") then begin
                 Clear(AddDimensionValue);
                 Clear(SubDimensionValue);
                 AddDimensionValue := DimensionAmountOne + 10;
                 SubDimensionValue := DimensionAmountOne - 10;
-                if ((AddDimensionValue < DistRuleFilter."Distrubution Amount One") or (DistRuleFilter."Distrubution Amount One" < SubDimensionValue)) then
+                if ((AddDimensionValue < DistRuleFilter."Distribution Amount One") or (DistRuleFilter."Distribution Amount One" < SubDimensionValue)) then
                     Error('In Employee tab Project Amount Must be equal to Distribution Amount One');
             end;
         end;
@@ -733,12 +742,12 @@ codeunit 50200 "User Customize Manage"
                     DimensionAmountTwo += DistributionProject."Project Amount";
                 until DistributionProject.Next() = 0;
 
-            if (DimensionAmountTwo <> DistRuleFilter."Distrubution Amount Two") then begin
+            if (DimensionAmountTwo <> DistRuleFilter."Distribution Amount Two") then begin
                 Clear(AddDimensionValue);
                 Clear(SubDimensionValue);
                 AddDimensionValue := DimensionAmountTwo + 10;
                 SubDimensionValue := DimensionAmountTwo - 10;
-                if ((AddDimensionValue < DistRuleFilter."Distrubution Amount Two") or (DistRuleFilter."Distrubution Amount Two" < SubDimensionValue)) then
+                if ((AddDimensionValue < DistRuleFilter."Distribution Amount Two") or (DistRuleFilter."Distribution Amount Two" < SubDimensionValue)) then
                     Error('In Employee tab Project Amount Must be equal to Distribution Amount Two');
             end;
         end;
@@ -750,12 +759,12 @@ codeunit 50200 "User Customize Manage"
                     DimensionAmountThree += DistributionProject."Project Amount";
                 until DistributionProject.Next() = 0;
 
-            if (DimensionAmountThree <> DistRuleFilter."Distrubution Amount Three") then begin
+            if (DimensionAmountThree <> DistRuleFilter."Distribution Amount Three") then begin
                 Clear(AddDimensionValue);
                 Clear(SubDimensionValue);
                 AddDimensionValue := DimensionAmountThree + 10;
                 SubDimensionValue := DimensionAmountThree - 10;
-                if ((AddDimensionValue < DistRuleFilter."Distrubution Amount Three") or (DistRuleFilter."Distrubution Amount Three" < SubDimensionValue)) then
+                if ((AddDimensionValue < DistRuleFilter."Distribution Amount Three") or (DistRuleFilter."Distribution Amount Three" < SubDimensionValue)) then
                     Error('In Employee tab Project Amount Must be equal to Distribution Amount Three');
             end;
         end;
@@ -767,12 +776,12 @@ codeunit 50200 "User Customize Manage"
                     DimensionAmountFour += DistributionProject."Project Amount";
                 until DistributionProject.Next() = 0;
 
-            if (DimensionAmountFour <> DistRuleFilter."Distrubution Amount Four") then begin
+            if (DimensionAmountFour <> DistRuleFilter."Distribution Amount Four") then begin
                 Clear(AddDimensionValue);
                 Clear(SubDimensionValue);
                 AddDimensionValue := DimensionAmountFour + 10;
                 SubDimensionValue := DimensionAmountFour - 10;
-                if ((AddDimensionValue < DistRuleFilter."Distrubution Amount Four") or (DistRuleFilter."Distrubution Amount Four" < SubDimensionValue)) then
+                if ((AddDimensionValue < DistRuleFilter."Distribution Amount Four") or (DistRuleFilter."Distribution Amount Four" < SubDimensionValue)) then
                     Error('In Employee tab Project Amount Must be equal to Distribution Amount Four');
             end;
         end;
@@ -784,12 +793,12 @@ codeunit 50200 "User Customize Manage"
                     DimensionAmountFive += DistributionProject."Project Amount";
                 until DistributionProject.Next() = 0;
 
-            if (DimensionAmountFive <> DistRuleFilter."Distrubution Amount Five") then begin
+            if (DimensionAmountFive <> DistRuleFilter."Distribution Amount Five") then begin
                 Clear(AddDimensionValue);
                 Clear(SubDimensionValue);
                 AddDimensionValue := DimensionAmountFive + 10;
                 SubDimensionValue := DimensionAmountFive - 10;
-                if ((AddDimensionValue < DistRuleFilter."Distrubution Amount Five") or (DistRuleFilter."Distrubution Amount Five" < SubDimensionValue)) then
+                if ((AddDimensionValue < DistRuleFilter."Distribution Amount Five") or (DistRuleFilter."Distribution Amount Five" < SubDimensionValue)) then
                     Error('In Employee tab Project Amount Must be equal to Distribution Amount Five');
             end;
         end;
@@ -803,12 +812,12 @@ codeunit 50200 "User Customize Manage"
             until DistributionProject.Next() = 0;
         DeleteDistributionProjectLinesWhichAmountIsEqualToZero(DistributionProject."Entry No.", DistributionProject);
 
-        if (DistributionTotalProjectAmount <> DistRuleFilter."Distrubution Amount") then begin
+        if (DistributionTotalProjectAmount <> DistRuleFilter."Distribution Amount") then begin
             Clear(AddDimensionValue);
             Clear(SubDimensionValue);
             AddDimensionValue := DistributionTotalProjectAmount + 10;
             SubDimensionValue := DistributionTotalProjectAmount - 10;
-            if ((AddDimensionValue < DistRuleFilter."Distrubution Amount") or (DistRuleFilter."Distrubution Amount" < SubDimensionValue)) then
+            if ((AddDimensionValue < DistRuleFilter."Distribution Amount") or (DistRuleFilter."Distribution Amount" < SubDimensionValue)) then
                 Error('Distribution Total Project Amount Must be equal to Distribution Amount');
         end;
     end;
@@ -1010,7 +1019,7 @@ codeunit 50200 "User Customize Manage"
         DistributionLineCountFour: Integer;
         DistributionLineCountFive: Integer;
     begin
-        DistRuleFilter.TestField("Distrubution Amount");
+        DistRuleFilter.TestField("Distribution Amount");
         DistProject.SetRange("Entry No.", DistRuleFilter."Entry No.");
         if FilterVal = 1 then
             DistProject.SetRange("Shortcut Dimension 2 Code", DistRuleFilter."Dimension Value One");
@@ -1023,7 +1032,7 @@ codeunit 50200 "User Customize Manage"
         if FilterVal = 5 then
             DistProject.SetRange("Shortcut Dimension 2 Code", DistRuleFilter."Dimension Value Five");
 
-        // if (DistRuleFilter."Distrubution Method" = DistRuleFilter."Distrubution Method"::Proportion) then begin
+        // if (DistRuleFilter."Distribution Method" = DistRuleFilter."Distribution Method"::Proportion) then begin
         CreateDistributionYearAndDate(DistRuleFilter."Entry No.");
         DistributionLine.Reset();
         DistributionLine.SetRange(Year, DistributionYear);
@@ -1074,7 +1083,7 @@ codeunit 50200 "User Customize Manage"
             exit;
 
         if FilterVal = 0 then begin
-            DistAmount := DistRuleFilter."Distrubution Amount";
+            DistAmount := DistRuleFilter."Distribution Amount";
             DistAmountEquly := Round(DistAmount / TotEmpCount, 0.01);
         end;
 
@@ -1098,7 +1107,7 @@ codeunit 50200 "User Customize Manage"
         TotEmpCount: Integer;
         Inx: Integer;
     begin
-        DistRuleFilter.TestField("Distrubution Amount");
+        DistRuleFilter.TestField("Distribution Amount");
         DistProject.SetRange("Entry No.", DistRuleFilter."Entry No.");
         if FilterVal = 1 then
             DistProject.SetRange("Shortcut Dimension 2 Code", DistRuleFilter."Dimension Value One");
@@ -1118,27 +1127,27 @@ codeunit 50200 "User Customize Manage"
         if TotEmpCount = 0 then
             exit;
         if FilterVal = 0 then begin
-            DistAmount := DistRuleFilter."Distrubution Amount";
+            DistAmount := DistRuleFilter."Distribution Amount";
             DistAmountEquly := Round(DistAmount / TotEmpCount, 0.01);
         end;
         if FilterVal = 1 then begin
-            DistAmount := DistRuleFilter."Distrubution Amount One";
+            DistAmount := DistRuleFilter."Distribution Amount One";
             DistAmountEquly := Round(DistAmount / TotEmpCount, 0.01);
         end;
         if FilterVal = 2 then begin
-            DistAmount := DistRuleFilter."Distrubution Amount Two";
+            DistAmount := DistRuleFilter."Distribution Amount Two";
             DistAmountEquly := Round(DistAmount / TotEmpCount, 0.01);
         end;
         if FilterVal = 3 then begin
-            DistAmount := DistRuleFilter."Distrubution Amount Three";
+            DistAmount := DistRuleFilter."Distribution Amount Three";
             DistAmountEquly := Round(DistAmount / TotEmpCount, 0.01);
         end;
         if FilterVal = 4 then begin
-            DistAmount := DistRuleFilter."Distrubution Amount Four";
+            DistAmount := DistRuleFilter."Distribution Amount Four";
             DistAmountEquly := Round(DistAmount / TotEmpCount, 0.01);
         end;
         if FilterVal = 5 then begin
-            DistAmount := DistRuleFilter."Distrubution Amount Five";
+            DistAmount := DistRuleFilter."Distribution Amount Five";
             DistAmountEquly := Round(DistAmount / TotEmpCount, 0.01);
         end;
         repeat
@@ -1159,11 +1168,11 @@ codeunit 50200 "User Customize Manage"
         DistRule: Record "Distribution Rule";
     begin
         DisRuleFilter.Get(EntryNo);
-        if (DisRuleFilter."Distrubution Method" <> DisRuleFilter."Distrubution Method"::Manually) then
+        if (DisRuleFilter."Distribution Method" <> DisRuleFilter."Distribution Method"::Manually) then
             DisRuleFilter.TestField("Sales Invoice", false);
         DistRule.SetRange("Entry No.", EntryNo);
         if DistRule.FindSet() then
-            if (DisRuleFilter."Distrubution Method" <> DisRuleFilter."Distrubution Method"::Manually) then
+            if (DisRuleFilter."Distribution Method" <> DisRuleFilter."Distribution Method"::Manually) then
                 Error('Distribution line exists, please delete lines.');
     end;
 
@@ -1305,7 +1314,7 @@ codeunit 50200 "User Customize Manage"
 
     procedure UpdateDisSetupLineXL(Year: Code[20]; Month: Code[20])
     var
-        DisLine: Record "Distribution Line";
+        DistributionLine: Record "Distribution Line";
         TempExcelBuffer: Record "Excel Buffer" temporary;
         FileManage: Codeunit "File Management";
         InStm: InStream;
@@ -1326,6 +1335,7 @@ codeunit 50200 "User Customize Manage"
         end
         else
             Error('No excel file selected.');
+
         Clear(TempExcelBuffer);
         TempExcelBuffer.DeleteAll();
         TempExcelBuffer.OpenBookStream(InStm, SheetName);
@@ -1333,31 +1343,39 @@ codeunit 50200 "User Customize Manage"
         Clear(TempExcelBuffer);
         if TempExcelBuffer.FindLast() then
             MaxRowCount := TempExcelBuffer."Row No.";
+
         Clear(TempExcelBuffer);
+        DistributionLine.SetRange(Year, Year);
+        DistributionLine.SetRange(Month, Month);
+        if (DistributionLine.FindSet(false) = true) then
+            DistributionLine.DeleteAll(false);
+
         for RowCount := 2 to MaxRowCount do begin
             if Year <> GetValueAtCell(TempExcelBuffer, RowCount, 1) then
                 Error('Year must be same.');
+
             if Month <> GetValueAtCell(TempExcelBuffer, RowCount, 2) then
                 Error('Month must be same.');
-            Clear(DisLine);
-            DisLine.Init();
-            DisLine.Year := Year;
-            DisLine.Month := Month;
-            DisLine."Shortcut Dimension 1 Code" := GetValueAtCell(TempExcelBuffer, RowCount, 3);
-            DisLine."Shortcut Dimension 2 Code" := GetValueAtCell(TempExcelBuffer, RowCount, 4);
-            DisLine."Shortcut Dimension 3 Code" := GetValueAtCell(TempExcelBuffer, RowCount, 5);
+
+            Clear(DistributionLine);
+            DistributionLine.Init();
+            DistributionLine.Year := Year;
+            DistributionLine.Month := Month;
+            DistributionLine."Shortcut Dimension 1 Code" := GetValueAtCell(TempExcelBuffer, RowCount, 3);
+            DistributionLine."Shortcut Dimension 2 Code" := GetValueAtCell(TempExcelBuffer, RowCount, 4);
+            DistributionLine."Shortcut Dimension 3 Code" := GetValueAtCell(TempExcelBuffer, RowCount, 5);
             Clear(SheetVal);
             Evaluate(SheetVal, GetValueAtCell(TempExcelBuffer, RowCount, 6));
-            DisLine."Percentage One" := SheetVal;
-            DisLine."Shortcut Dimension 3 Two" := GetValueAtCell(TempExcelBuffer, RowCount, 7);
+            DistributionLine."Percentage One" := SheetVal;
+            DistributionLine."Shortcut Dimension 3 Two" := GetValueAtCell(TempExcelBuffer, RowCount, 7);
             Clear(SheetVal);
             Evaluate(SheetVal, GetValueAtCell(TempExcelBuffer, RowCount, 8));
-            DisLine."Percentage Two" := SheetVal;
-            DisLine."Shortcut Dimension 3 Three" := GetValueAtCell(TempExcelBuffer, RowCount, 9);
+            DistributionLine."Percentage Two" := SheetVal;
+            DistributionLine."Shortcut Dimension 3 Three" := GetValueAtCell(TempExcelBuffer, RowCount, 9);
             Clear(SheetVal);
             Evaluate(SheetVal, GetValueAtCell(TempExcelBuffer, RowCount, 10));
-            DisLine."Percentage Three" := SheetVal;
-            DisLine.Insert();
+            DistributionLine."Percentage Three" := SheetVal;
+            DistributionLine.Insert(false);
         end;
         Message('Excel update process completed.');
     end;
@@ -1373,6 +1391,7 @@ codeunit 50200 "User Customize Manage"
     begin
         if (GLEntry.Get(EntryNo) = false) then
             exit;
+
         DistributionPostingDate := GLEntry."Posting Date";
         PostingDate := Format(DistributionPostingDate);// 01/10/23
         Month := CopyStr(PostingDate, 1, 2);
@@ -1468,8 +1487,6 @@ codeunit 50200 "User Customize Manage"
                 DistributionRule.FindLast();
                 DistributionRule."Amount Allocated" += RemainingAmount;
                 DistributionRule.Modify(false);
-                // RemAmount := Amount - DistributionRule."Amount Allocated";
-                Message('Remaining Amount has been Updated');
             end;
         end;
     end;
@@ -1492,6 +1509,7 @@ codeunit 50200 "User Customize Manage"
         LineNo: Integer;
         DistributionProjectAmount: Decimal;
         EmployeeOfText: Text;
+        EmployeeText: Text;
         ProjectText: Text;
         ValueOfText: Text;
         BranchCode: Text;
@@ -1508,7 +1526,7 @@ codeunit 50200 "User Customize Manage"
                 DistributionProjectAmount += DistributionProject."Project Amount";
             until DistributionProject.Next() = 0;
 
-        if (DistributionProjectAmount <> DistributionRulefilter."Distrubution Amount") then
+        if (DistributionProjectAmount <> DistributionRulefilter."Distribution Amount") then
             Error('Please Update the Exact Amout in Employee Line');
 
         DistributionProject.SetRange("Entry No.", DistributionProject."Entry No.");
@@ -1526,55 +1544,38 @@ codeunit 50200 "User Customize Manage"
 
         CreateDistributionYearAndDate(DistributionProject."Entry No.");
         for IntegerOfList2 := 1 to BranchCodeList2.Count do begin
-            BranchCode := BranchCodeList2.Get(IntegerOfList2);
-            for IntegerEmployeeList := 1 to EmployeeCodeList.Count do begin
-                EmployeeOfText := EmployeeCodeList.Get(IntegerEmployeeList);
-                if ((DistributionRulefilter."Dimension Value One" = BranchCode)) then begin
-                    DistributionLine.Reset();
-                    DistributionLine.SetRange(Year, DistributionYear);
-                    DistributionLine.SetRange(Month, DistributionMonth);
-                    DistributionLine.SetRange("Shortcut Dimension 2 Code", DistributionRulefilter."Dimension Value One");
-                    DistributionLine.SetRange("Shortcut Dimension 1 Code", EmployeeOfText);
-                    If (DistributionLine.FindFirst() = false) then
-                        exit
-                    else begin
-                        if (DistributionLine."Shortcut Dimension 3 Code" <> '') then
-                            ProjectCodeList.Add(DistributionLine."Shortcut Dimension 3 Code");
-
-                        if (DistributionLine."Shortcut Dimension 3 Two" <> '') then
-                            ProjectCodeList.Add(DistributionLine."Shortcut Dimension 3 Two");
-
-                        if (DistributionLine."Shortcut Dimension 3 Three" <> '') then
-                            ProjectCodeList.Add(DistributionLine."Shortcut Dimension 3 Three");
-
-                    end;
-                    DimensionValueOne := true;
-                end else begin
-                    if (DistributionRulefilter."Dimension Value Two" = BranchCode) then begin
-                        DistributionLine.Reset();
-                        DistributionLine.SetRange(Year, DistributionYear);
-                        DistributionLine.SetRange(Month, DistributionMonth);
-                        DistributionLine.SetRange("Shortcut Dimension 2 Code", DistributionRulefilter."Dimension Value Two");
-                        DistributionLine.SetRange("Shortcut Dimension 1 Code", EmployeeOfText);
-                        If (DistributionLine.FindFirst() = false) then
-                            exit
-                        else begin
-                            if (DistributionLine."Shortcut Dimension 3 Code" <> '') then
-                                ProjectCodeList.Add(DistributionLine."Shortcut Dimension 3 Code");
-
-                            if (DistributionLine."Shortcut Dimension 3 Two" <> '') then
-                                ProjectCodeList.Add(DistributionLine."Shortcut Dimension 3 Two");
-
-                            if (DistributionLine."Shortcut Dimension 3 Three" <> '') then
-                                ProjectCodeList.Add(DistributionLine."Shortcut Dimension 3 Three");
-
-                        end;
-                        DimensionValueTwo := true;
-                    end;
-                end;
-            end;
-
+            if (BranchCode = '') then
+                BranchCode := BranchCodeList2.Get(IntegerOfList2)
+            else
+                BranchCode += '|' + BranchCodeList2.Get(IntegerOfList2);
         end;
+
+        for IntegerEmployeeList := 1 to EmployeeCodeList.Count do begin
+            EmployeeOfText := EmployeeCodeList.Get(IntegerEmployeeList);
+            if (EmployeeText = '') then
+                EmployeeText := EmployeeCodeList.Get(IntegerEmployeeList)
+            else
+                EmployeeText += '|' + EmployeeCodeList.Get(IntegerEmployeeList);
+
+            DistributionLine.Reset();
+            DistributionLine.SetRange(Year, DistributionYear);
+            DistributionLine.SetRange(Month, DistributionMonth);
+            DistributionLine.SetFilter("Shortcut Dimension 2 Code", BranchCode);
+            DistributionLine.SetRange("Shortcut Dimension 1 Code", EmployeeOfText);
+            If (DistributionLine.FindFirst() = false) then
+                exit
+            else begin
+                if (DistributionLine."Shortcut Dimension 3 Code" <> '') then
+                    ProjectCodeList.Add(DistributionLine."Shortcut Dimension 3 Code");
+
+                if (DistributionLine."Shortcut Dimension 3 Two" <> '') then
+                    ProjectCodeList.Add(DistributionLine."Shortcut Dimension 3 Two");
+
+                if (DistributionLine."Shortcut Dimension 3 Three" <> '') then
+                    ProjectCodeList.Add(DistributionLine."Shortcut Dimension 3 Three");
+            end;
+        end;
+
         for ProjectIntegerList := 1 to ProjectCodeList.Count do begin
             ProjectText := ProjectCodeList.Get(ProjectIntegerList);
             if (ProjectCodeList2.IndexOf(ProjectText) = 0) then begin
@@ -1588,8 +1589,15 @@ codeunit 50200 "User Customize Manage"
                 DistributionRule.Init();
                 DistributionRule."Line No." := LineNo;
                 DistributionRule."Entry No." := DistributionProject."Entry No.";
-                DistributionRule."Shortcut Dimension 2 Code" := DistributionProject."Shortcut Dimension 2 Code";
                 DistributionRule."Shortcut Dimension 3 Code" := ProjectText;
+                DistributionLine.Reset();
+                DistributionLine.SetRange(Year, DistributionYear);
+                DistributionLine.SetRange(Month, DistributionMonth);
+                DistributionLine.SetFilter("Shortcut Dimension 3 Code", ProjectText);
+                DistributionLine.SetFilter("Shortcut Dimension 1 Code", EmployeeText);
+                if (DistributionLine.FindFirst() = true) then
+                    DistributionRule."Shortcut Dimension 2 Code" := DistributionLine."Shortcut Dimension 2 Code";
+
                 DistributionRule.Insert(false);
             end;
         end;

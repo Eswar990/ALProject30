@@ -33,7 +33,7 @@ table 50201 "Distribution Rule Filter"
             end;
         }
 
-        field(18; "Distrubution Method"; Option)
+        field(18; "Distribution Method"; Option)
         {
             Caption = 'Distribution Method';
             OptionMembers = " ",/*Equally,Proportion,*/Manually;
@@ -60,7 +60,7 @@ table 50201 "Distribution Rule Filter"
             Caption = 'G/L Amount';
         }
 
-        field(25; "Distrubution Amount"; Decimal)
+        field(25; "Distribution Amount"; Decimal)
         {
             Caption = 'Distribution Amount';
             Editable = false;
@@ -87,13 +87,13 @@ table 50201 "Distribution Rule Filter"
             begin
                 /* In this Dimension Will give only Respected Dimension Values*/
 
-                if ((Rec."Distrubution Method" = Rec."Distrubution Method"::Manually)) then begin
+                if ((Rec."Distribution Method" = Rec."Distribution Method"::Manually)) then begin
                     if ("Distribution Setup" = true) then begin
                         if (("Dimension Value One" <> '')) then
                             UserCustManage.CreateProjectDistFromDistributionLine(Rec."Entry No.", Rec."Dimension Value One", xRec."Dimension Value One", Rec."G/L Account No.", 1);
                     end else begin
                         if "Dimension Value One" = '' then
-                            "Distrubution Amount One" := 0;
+                            "Distribution Amount One" := 0;
                         UserCustManage.CreateProjectDistRuleFilter(Rec."Entry No.", Rec."Dimension Value One", xRec."Dimension Value One", Rec."G/L Account No.");
                     end;
                 end else
@@ -101,7 +101,7 @@ table 50201 "Distribution Rule Filter"
             end;
         }
 
-        field(33; "Distrubution Amount One"; Decimal)
+        field(33; "Distribution Amount One"; Decimal)
         {
             Caption = 'Distribution Amount One';
         }
@@ -114,13 +114,13 @@ table 50201 "Distribution Rule Filter"
             begin
                 /* In this Dimension Will give only Respected Dimension Values*/
 
-                if ((Rec."Distrubution Method" = Rec."Distrubution Method"::Manually)) then begin
+                if ((Rec."Distribution Method" = Rec."Distribution Method"::Manually)) then begin
                     if ("Distribution Setup" = true) then begin
                         if ("Dimension Value Two" <> '') then
                             UserCustManage.CreateProjectDistFromDistributionLine(Rec."Entry No.", Rec."Dimension Value Two", xRec."Dimension Value Two", Rec."G/L Account No.", 2);
                     end else begin
                         if "Dimension Value Two" = '' then
-                            "Distrubution Amount Two" := 0;
+                            "Distribution Amount Two" := 0;
                         UserCustManage.CreateProjectDistRuleFilter(Rec."Entry No.", Rec."Dimension Value Two", xRec."Dimension Value Two", Rec."G/L Account No.");
                     end;
                 end else
@@ -128,7 +128,7 @@ table 50201 "Distribution Rule Filter"
             end;
         }
 
-        field(36; "Distrubution Amount Two"; Decimal)
+        field(36; "Distribution Amount Two"; Decimal)
         {
             Caption = 'Distribution Amount Two';
         }
@@ -141,13 +141,13 @@ table 50201 "Distribution Rule Filter"
             begin
                 /* In this Dimension Will give only Respected Dimension Values*/
 
-                if ((Rec."Distrubution Method" = Rec."Distrubution Method"::Manually)) then begin
+                if ((Rec."Distribution Method" = Rec."Distribution Method"::Manually)) then begin
                     if ("Distribution Setup" = true) then begin
                         if ("Dimension Value Three" <> '') then
                             UserCustManage.CreateProjectDistFromDistributionLine(Rec."Entry No.", Rec."Dimension Value Three", xRec."Dimension Value Three", Rec."G/L Account No.", 3);
                     end else begin
                         if "Dimension Value Three" = '' then
-                            "Distrubution Amount Three" := 0;
+                            "Distribution Amount Three" := 0;
                         UserCustManage.CreateProjectDistRuleFilter(Rec."Entry No.", Rec."Dimension Value Three", xRec."Dimension Value Three", Rec."G/L Account No.");
                     end;
                 end else
@@ -155,7 +155,7 @@ table 50201 "Distribution Rule Filter"
             end;
         }
 
-        field(42; "Distrubution Amount Three"; Decimal)
+        field(42; "Distribution Amount Three"; Decimal)
         {
             Caption = 'Distribution Amount Three';
         }
@@ -168,13 +168,13 @@ table 50201 "Distribution Rule Filter"
             begin
                 /* In this Dimension Will give only Respected Dimension Values*/
 
-                if ((Rec."Distrubution Method" = Rec."Distrubution Method"::Manually)) then begin
+                if ((Rec."Distribution Method" = Rec."Distribution Method"::Manually)) then begin
                     if ("Distribution Setup" = true) then begin
                         if ("Dimension Value Four" <> '') then
                             UserCustManage.CreateProjectDistFromDistributionLine(Rec."Entry No.", Rec."Dimension Value Four", xRec."Dimension Value Four", Rec."G/L Account No.", 4);
                     end else begin
                         if "Dimension Value Four" = '' then
-                            "Distrubution Amount Four" := 0;
+                            "Distribution Amount Four" := 0;
                         UserCustManage.CreateProjectDistRuleFilter(Rec."Entry No.", Rec."Dimension Value Four", xRec."Dimension Value Four", Rec."G/L Account No.");
                     end;
                 end else
@@ -182,7 +182,7 @@ table 50201 "Distribution Rule Filter"
             end;
         }
 
-        field(47; "Distrubution Amount Four"; Decimal)
+        field(47; "Distribution Amount Four"; Decimal)
         {
             Caption = 'Distribution Amount Four';
         }
@@ -195,13 +195,13 @@ table 50201 "Distribution Rule Filter"
             begin
                 /* In this Dimension Will give only Respected Dimension Values*/
 
-                if ((Rec."Distrubution Method" = Rec."Distrubution Method"::Manually)) then begin
+                if ((Rec."Distribution Method" = Rec."Distribution Method"::Manually)) then begin
                     if ("Distribution Setup" = true) then begin
                         if ("Dimension Value Five" <> '') then
                             UserCustManage.CreateProjectDistFromDistributionLine(Rec."Entry No.", Rec."Dimension Value Five", xRec."Dimension Value Five", Rec."G/L Account No.", 4);
                     end else begin
                         if "Dimension Value Four" = '' then
-                            "Distrubution Amount Four" := 0;
+                            "Distribution Amount Four" := 0;
                         UserCustManage.CreateProjectDistRuleFilter(Rec."Entry No.", Rec."Dimension Value Five", xRec."Dimension Value Five", Rec."G/L Account No.");
                     end;
                 end else
@@ -209,7 +209,7 @@ table 50201 "Distribution Rule Filter"
             end;
         }
 
-        field(52; "Distrubution Amount Five"; Decimal)
+        field(52; "Distribution Amount Five"; Decimal)
         {
             Caption = 'Distribution Amount Five';
         }

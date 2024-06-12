@@ -61,23 +61,25 @@ page 50201 "Distribution Rule Filter"
                         CurrPage.DistributionRule.Page.UpdateAmount(Amount, RemAmount);
                     end;
                 }
-                field("Distrubution Method"; Rec."Distrubution Method")
+                field("Distribution Method"; Rec."Distribution Method")
                 {
-                    ToolTip = 'Specifies Distrubution Method field.';
+                    ToolTip = 'Specifies Distribution Method field.';
                     Editable = IsFieldEditableDistributionMethod;
                     trigger OnValidate()
                     var
                         GLEntry: Record "G/L Entry";
                     begin
-                        if (Rec."Distrubution Method" = Rec."Distrubution Method"::Manually) then
-                            IsVisibleEmployeeDistributionAction := false;
+                        if (Rec."Distribution Method" = Rec."Distribution Method"::Manually) then
+                            IsVisibleEmployeeDistributionAction := false
+                        else
+                            IsVisibleEmployeeDistributionAction := true;
 
                         GLEntry.Get(Rec."Entry No.");
                         CalRemAmount(GLEntry);
                         CurrPage.DistributionRule.Page.UpdateAmount(Amount, RemAmount);
                     end;
                 }
-                field("Distrubution Amount"; Rec."Distrubution Amount")
+                field("Distribution Amount"; Rec."Distribution Amount")
                 {
                     ToolTip = 'Specifies the value of the Amount Distribute field.';
                     Visible = FieldEditable;
@@ -108,7 +110,7 @@ page 50201 "Distribution Rule Filter"
                         CurrPage.DistributionRule.Page.UpdateAmount(Amount, RemAmount);
                     end;
                 }
-                field("Distrubution Amount One"; Rec."Distrubution Amount One")
+                field("Distribution Amount One"; Rec."Distribution Amount One")
                 {
                     ToolTip = 'Specifies the value of the Distribution Amount One field.';
                     Editable = FieldDimVEdit;
@@ -134,7 +136,7 @@ page 50201 "Distribution Rule Filter"
                         CurrPage.DistributionRule.Page.UpdateAmount(Amount, RemAmount);
                     end;
                 }
-                field("Distrubution Amount Two"; Rec."Distrubution Amount Two")
+                field("Distribution Amount Two"; Rec."Distribution Amount Two")
                 {
                     ToolTip = 'Specifies the value of the Distribution Amount Two field.';
                     Editable = FieldDimVEdit;
@@ -160,7 +162,7 @@ page 50201 "Distribution Rule Filter"
                         CurrPage.DistributionRule.Page.UpdateAmount(Amount, RemAmount);
                     end;
                 }
-                field("Distrubution Amount Three"; Rec."Distrubution Amount Three")
+                field("Distribution Amount Three"; Rec."Distribution Amount Three")
                 {
                     ToolTip = 'Specifies the value of the Distribution Amount Three field.';
                     Editable = FieldDimVEdit;
@@ -186,7 +188,7 @@ page 50201 "Distribution Rule Filter"
                         CurrPage.DistributionRule.Page.UpdateAmount(Amount, RemAmount);
                     end;
                 }
-                field("Distrubution Amount Four"; Rec."Distrubution Amount Four")
+                field("Distribution Amount Four"; Rec."Distribution Amount Four")
                 {
                     ToolTip = 'Specifies the value of the Distribution Amount Four field.';
                     Editable = FieldDimVEdit;
@@ -212,7 +214,7 @@ page 50201 "Distribution Rule Filter"
                         CurrPage.DistributionRule.Page.UpdateAmount(Amount, RemAmount);
                     end;
                 }
-                field("Distrubution Amount Five"; Rec."Distrubution Amount Five")
+                field("Distribution Amount Five"; Rec."Distribution Amount Five")
                 {
                     ToolTip = 'Specifies the value of the Distribution Amount Five field.';
                     Editable = FieldDimVEdit;
@@ -287,7 +289,7 @@ page 50201 "Distribution Rule Filter"
                     // CheckingTotalValue()
                     EmployeeDistributionAction := true;
                     VisibilityOfDistributionRuleFilterFileds();
-                    if (Rec."Distrubution Method" = Rec."Distrubution Method"::Manually) then
+                    if (Rec."Distribution Method" = Rec."Distribution Method"::Manually) then
                         Error('This Action Will Not Works Distribution Method is Manually Please Remove');
 
                     if Rec."Sales Invoice" then
@@ -299,7 +301,7 @@ page 50201 "Distribution Rule Filter"
 
                     /*Employee Distribution Entries*/
 
-                    if ((Rec."Dimension Value One" = '') and (Rec."Distrubution Amount One" = 0) and (Rec."Dimension Value Two" = '') and (Rec."Distrubution Amount Two" = 0) and (Rec."Dimension Value Three" = '') and (Rec."Distrubution Amount Three" = 0) and (Rec."Dimension Value Four" = '') and (Rec."Distrubution Amount Four" = 0) and (Rec."Dimension Value Five" = '') and (Rec."Distrubution Amount Five" = 0)) then begin
+                    if ((Rec."Dimension Value One" = '') and (Rec."Distribution Amount One" = 0) and (Rec."Dimension Value Two" = '') and (Rec."Distribution Amount Two" = 0) and (Rec."Dimension Value Three" = '') and (Rec."Distribution Amount Three" = 0) and (Rec."Dimension Value Four" = '') and (Rec."Distribution Amount Four" = 0) and (Rec."Dimension Value Five" = '') and (Rec."Distribution Amount Five" = 0)) then begin
                         if (Rec."Distribution Setup" = true) then begin
                             GetMonthAndYear(GLEntry);
                             DistributionLines.SetRange(Year, DistributionYear);
@@ -335,7 +337,7 @@ page 50201 "Distribution Rule Filter"
                                         DistributionProject."Entry No." := Rec."Entry No.";
                                         DistributionProject."Shortcut Dimension 2 Code" := DistributionLines."Shortcut Dimension 2 Code";
                                         DistributionProject."Shortcut Dimension 3 Code" := DistributionLines."Shortcut Dimension 1 Code";
-                                        DistributionProject."Project Amount" := Round(Rec."Distrubution Amount" / EmployeeCount, 0.01);
+                                        DistributionProject."Project Amount" := Round(Rec."Distribution Amount" / EmployeeCount, 0.01);
                                         DistributionProject."Project Line" := true;
                                         DistributionProject."Line No." := DistributionProjectLineNo + 1000;
                                         DistributionProject."Emp. Count" := UserCustomizedmanage.GetEmployeeCountFromDistributionSetup(DistributionYear, DistributionMonth, DistributionLines."Shortcut Dimension 1 Code", BranchCode);
@@ -381,57 +383,57 @@ page 50201 "Distribution Rule Filter"
 
                             for IntegerOfListTwo := 1 to BranchCodeListTwo.Count do begin
                                 if (DimensionValueOne = '') then begin
-                                    Clear(Rec."Distrubution Amount One");
+                                    Clear(Rec."Distribution Amount One");
                                     DimensionValueOne := BranchCodeListTwo.Get(IntegerOfListTwo);
                                     DistributionProject.SetRange("Entry No.", Rec."Entry No.");
                                     DistributionProject.SetRange("Shortcut Dimension 2 Code", DimensionValueOne);
                                     if (DistributionProject.FindSet(false) = true) then
                                         repeat
-                                            Rec."Distrubution Amount One" += DistributionProject."Project Amount";
+                                            Rec."Distribution Amount One" += DistributionProject."Project Amount";
                                         until DistributionProject.Next() = 0;
                                     Rec."Dimension Value One" := DimensionValueOne;
                                 end else begin
                                     if (DimensionValueTwo = '') then begin
-                                        Clear(Rec."Distrubution Amount Two");
+                                        Clear(Rec."Distribution Amount Two");
                                         DimensionValueTwo := BranchCodeListTwo.Get(IntegerOfListTwo);
                                         DistributionProject.SetRange("Entry No.", Rec."Entry No.");
                                         DistributionProject.SetRange("Shortcut Dimension 2 Code", DimensionValueTwo);
                                         if (DistributionProject.FindSet(false) = true) then
                                             repeat
-                                                Rec."Distrubution Amount Two" += DistributionProject."Project Amount";
+                                                Rec."Distribution Amount Two" += DistributionProject."Project Amount";
                                             until DistributionProject.Next() = 0;
                                         Rec."Dimension Value Two" := DimensionValueTwo;
                                     end else begin
                                         if (DimensionValueThree = '') then begin
-                                            Clear(Rec."Distrubution Amount Three");
+                                            Clear(Rec."Distribution Amount Three");
                                             DimensionValueThree := BranchCodeListTwo.Get(IntegerOfListTwo);
                                             DistributionProject.SetRange("Entry No.", Rec."Entry No.");
                                             DistributionProject.SetRange("Shortcut Dimension 2 Code", DimensionValueThree);
                                             if (DistributionProject.FindSet(false) = true) then
                                                 repeat
-                                                    Rec."Distrubution Amount Three" += DistributionProject."Project Amount";
+                                                    Rec."Distribution Amount Three" += DistributionProject."Project Amount";
                                                 until DistributionProject.Next() = 0;
                                             Rec."Dimension Value Three" := DimensionValueThree;
                                         end else begin
                                             if (DimensionValueFour = '') then begin
-                                                Clear(Rec."Distrubution Amount Four");
+                                                Clear(Rec."Distribution Amount Four");
                                                 DimensionValueFour := BranchCodeListTwo.Get(IntegerOfListTwo);
                                                 DistributionProject.SetRange("Entry No.", Rec."Entry No.");
                                                 DistributionProject.SetRange("Shortcut Dimension 2 Code", DimensionValueFour);
                                                 if (DistributionProject.FindSet(false) = true) then
                                                     repeat
-                                                        Rec."Distrubution Amount Four" += DistributionProject."Project Amount";
+                                                        Rec."Distribution Amount Four" += DistributionProject."Project Amount";
                                                     until DistributionProject.Next() = 0;
                                                 Rec."Dimension Value Four" := DimensionValueFour;
                                             end else begin
                                                 if (DimensionValueFive = '') then begin
-                                                    Clear(Rec."Distrubution Amount Five");
+                                                    Clear(Rec."Distribution Amount Five");
                                                     DimensionValueFive := BranchCodeListTwo.Get(IntegerOfListTwo);
                                                     DistributionProject.SetRange("Entry No.", Rec."Entry No.");
                                                     DistributionProject.SetRange("Shortcut Dimension 2 Code", DimensionValueFive);
                                                     if (DistributionProject.FindSet(false) = true) then
                                                         repeat
-                                                            Rec."Distrubution Amount Five" += DistributionProject."Project Amount";
+                                                            Rec."Distribution Amount Five" += DistributionProject."Project Amount";
                                                         until DistributionProject.Next() = 0;
                                                     Rec."Dimension Value Five" := DimensionValueFive;
                                                 end;
@@ -491,11 +493,11 @@ page 50201 "Distribution Rule Filter"
                         until Distributionproject.Next() = 0;
                     UserCustomizedmanage.CalculateAndUpdateRemainingAmountonDistributionLines(GLEntry);
                     UserCustomizedmanage.CombineProjectCodeAndAmount(AzzDistributionRule, Distributionproject);
-                    if (RoundTotalProjectAmount) <> (Rec."Distrubution Amount") then begin
+                    if (RoundTotalProjectAmount) <> (Rec."Distribution Amount") then begin
                         AddRoundTotalProjectAmount := (RoundTotalProjectAmount + 10);
                         SubRoundTotalProjectAmount := (RoundTotalProjectAmount - 10);
                         if ((RoundTotalProjectAmount > AddRoundTotalProjectAmount) or (RoundTotalProjectAmount < SubRoundTotalProjectAmount)) then
-                            Error('Total project is %1 amount must be equal to Distribution amount %2.', (RoundTotalProjectAmount), Rec."Distrubution Amount");
+                            Error('Total project is %1 amount must be equal to Distribution amount %2.', (RoundTotalProjectAmount), Rec."Distribution Amount");
                     end;
 
                     RemAmount := 0;
@@ -555,15 +557,15 @@ page 50201 "Distribution Rule Filter"
         end;
 
         if Rec."Sales Invoice" then begin
-            Rec."Distrubution Amount" := Amount;
-            Rec."Distrubution Method" := Rec."Distrubution Method"::Manually;
+            Rec."Distribution Amount" := Amount;
+            Rec."Distribution Method" := Rec."Distribution Method"::Manually;
             FieldEditable := false;
             IsFieldEditableDistributionMethod := false;
-            if Rec."Distrubution Amount" = 0 then
-                Rec."Distrubution Amount" := Rec."G/L Amount";
+            if Rec."Distribution Amount" = 0 then
+                Rec."Distribution Amount" := Rec."G/L Amount";
         end
         else
-            Rec."Distrubution Amount" := Rec."G/L Amount";
+            Rec."Distribution Amount" := Rec."G/L Amount";
 
         if not Rec."Sales Invoice" then
             if Rec."Dimension Filter Exsist" then begin
@@ -584,10 +586,10 @@ page 50201 "Distribution Rule Filter"
             Rec.Validate("Dimension Value", '');
             if Rec."Dimension Value One" = '' then begin
                 Rec."Dimension Value One" := xRecDimValue;
-                Rec."Distrubution Amount One" := Rec."Distrubution Amount";
+                Rec."Distribution Amount One" := Rec."Distribution Amount";
             end;
         end;
-        if (Rec."Distrubution Method" = Rec."Distrubution Method"::Manually) then
+        if (Rec."Distribution Method" = Rec."Distribution Method"::Manually) then
             IsVisibleEmployeeDistributionAction := false
         else
             IsVisibleEmployeeDistributionAction := true;
