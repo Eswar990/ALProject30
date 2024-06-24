@@ -240,6 +240,7 @@ page 50201 "Distribution Rule Filter"
                 Caption = 'Project Line';
                 SubPageLink = "Entry No." = field("Entry No.");
                 Editable = IsEditableDistributionLinkParts;
+                // Visible = IsVisibleDistributionRule;
             }
 
             part(DistributionProjectLine; "Distribution Project Line")
@@ -312,6 +313,7 @@ page 50201 "Distribution Rule Filter"
                                     EmployeeCount += 1;
                                 until DistributionLines.Next() = 0;
 
+
                             for IntegerOfList := 1 to BranchCodeList.Count do begin
                                 ValueOfText := BranchCodeList.Get(IntegerOfList);
                                 if (BranchCodeListTwo.IndexOf(ValueOfText) = 0) then
@@ -342,7 +344,7 @@ page 50201 "Distribution Rule Filter"
                                         DistributionProject."Line No." := DistributionProjectLineNo + 1000;
                                         DistributionProject."Emp. Count" := UserCustomizedmanage.GetEmployeeCountFromDistributionSetup(DistributionYear, DistributionMonth, DistributionLines."Shortcut Dimension 1 Code", BranchCode);
                                         DistributionProject."G/L Account No." := GLEntry."G/L Account No.";
-                                        DistributionProject.Insert();
+                                        DistributionProject.Insert(false);
                                         ProjectIncrementValue := 1;
                                         /* Distribution Rule tab is populating values*/
                                         Clear(DistributionRule);
@@ -353,6 +355,7 @@ page 50201 "Distribution Rule Filter"
                                             DistributionRule."Shortcut Dimension 3 Code" := DistributionLines."Shortcut Dimension 3 Code";
                                             DistributionRule."Emp. Project Percentage" := DistributionLines."Percentage One";
                                             DistributionRule."Posting Date" := GLEntry."Posting Date";
+                                            DistributionRule."Document No." := GLEntry."Document No.";
                                             DistributionRule.Modify(false);
                                         end;
 
@@ -362,6 +365,7 @@ page 50201 "Distribution Rule Filter"
                                             DistributionRule."Shortcut Dimension 3 Code" := DistributionLines."Shortcut Dimension 3 Two";
                                             DistributionRule."Emp. Project Percentage" := DistributionLines."Percentage Two";
                                             DistributionRule."Posting Date" := GLEntry."Posting Date";
+                                            DistributionRule."Document No." := GLEntry."Document No.";
                                             DistributionRule.Modify(false);
                                         end;
 
@@ -371,6 +375,7 @@ page 50201 "Distribution Rule Filter"
                                             DistributionRule."Shortcut Dimension 3 Code" := DistributionLines."Shortcut Dimension 3 Three";
                                             DistributionRule."Emp. Project Percentage" := DistributionLines."Percentage Three";
                                             DistributionRule."Posting Date" := GLEntry."Posting Date";
+                                            DistributionRule."Document No." := GLEntry."Document No.";
                                             DistributionRule.Modify(false);
                                         end;
                                         Clear(ProjectIncrementValue);
@@ -492,7 +497,9 @@ page 50201 "Distribution Rule Filter"
                             RoundTotalProjectAmount += Distributionproject."Project Amount";
                         until Distributionproject.Next() = 0;
                     UserCustomizedmanage.CalculateAndUpdateRemainingAmountonDistributionLines(GLEntry);
-                    UserCustomizedmanage.CombineProjectCodeAndAmount(AzzDistributionRule, Distributionproject);
+                    if (Rec."Dist Single Line Amount" = false) then
+                        UserCustomizedmanage.CombineProjectCodeAndAmount(AzzDistributionRule, Distributionproject);
+
                     if (RoundTotalProjectAmount) <> (Rec."Distribution Amount") then begin
                         AddRoundTotalProjectAmount := (RoundTotalProjectAmount + 10);
                         SubRoundTotalProjectAmount := (RoundTotalProjectAmount - 10);
@@ -589,10 +596,15 @@ page 50201 "Distribution Rule Filter"
                 Rec."Distribution Amount One" := Rec."Distribution Amount";
             end;
         end;
+
         if (Rec."Distribution Method" = Rec."Distribution Method"::Manually) then
             IsVisibleEmployeeDistributionAction := false
         else
             IsVisibleEmployeeDistributionAction := true;
+
+        if (Rec."Dist Single Line Amount" = false) then
+            IsVisibleDistributionRule := true;
+
         Rec.Modify();
         CurrPage.DistributionRule.Page.UpdateAmount(Amount, RemAmount);
     end;
@@ -699,4 +711,5 @@ page 50201 "Distribution Rule Filter"
         IsVisibleEmployeeDistributionAction: Boolean;
         IsEditableDistributionLinkParts: Boolean;
         EmployeeDistributionAction: Boolean;
+        IsVisibleDistributionRule: Boolean;
 }

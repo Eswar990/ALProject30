@@ -6,8 +6,9 @@
             "request": "launch",
             "type": "al",
             "environmentType": "Sandbox",
-            "environmentName": "NewAzziteTest_06012024",//"AzziteTest_07042023",//"NewAzziteTest_06012024",//AzziteTest_07042023 //NewTestDB_20042023
+            "environmentName": "AzziteTest_07042023",
             // "environmentName": "NewAzziteTest_06012024",
+            // "environmentName": "NewTestDB_20042023",
             "startupObjectId": 22,
             "startupObjectType": "Page",
             "breakOnError": "All",

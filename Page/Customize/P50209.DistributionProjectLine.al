@@ -6,9 +6,8 @@ page 50209 "Distribution Project Line"
     SourceTable = "Distribution Project Line";
     SourceTableView = sorting("Entry No.", "Line No.");
     DelayedInsert = true;
+    AutoSplitKey = true;
     MultipleNewLines = true;
-    LinksAllowed = false;
-    InsertAllowed = false;
 
     layout
     {
@@ -26,17 +25,39 @@ page 50209 "Distribution Project Line"
                 {
                     ToolTip = 'Specifies the value of the Line No. field.';
                     Editable = false;
+                    Visible = false;
                 }
                 field("Shortcut Dimension 3 Code"; Rec."Shortcut Dimension 3 Code")
                 {
                     ToolTip = 'Specifies the value of the Shortcut Dimension 3 Code field.';
                     Editable = false;
                 }
+                field("Shortcut Dimension 1 Code"; Rec."Shortcut Dimension 1 Code")
+                {
+                    ToolTip = 'Specifies the value of the Shortcut Dimension 1 Code field.';
+                    Editable = false;
+                    Visible = false;
+                }
+                field("Shortcut Dimension 2 Code"; Rec."Shortcut Dimension 2 Code")
+                {
+                    ToolTip = 'Specifies the value of the Shortcut Dimension 2 Code field.';
+                    Editable = false;
+                }
 
                 field("Amount Allocated"; Rec."Amount Allocated")
                 {
                     ToolTip = 'Specifies the value of the Amount Allocated field.';
-                    Editable = false;
+                    Editable = IsAmountAllocatedEditable;
+                }
+                field("Emp. Project Count"; Rec."Emp. Project Count")
+                {
+                    ToolTip = 'Specifies the value of the Emp. Project Count field.';
+                    Visible = false;
+                }
+                field("Emp. Project Percentage"; Rec."Emp. Project Percentage")
+                {
+                    ToolTip = 'Specifies the value of the Emp. Project Percentage field.';
+                    Visible = false;
                 }
 
                 field("G/L Account No."; Rec."G/L Account No.")
@@ -71,6 +92,19 @@ page 50209 "Distribution Project Line"
         CurrPage.Update(true);
     end;
 
+    trigger OnAfterGetRecord()
+    var
+        DistributionRuleFilter: Record "Distribution Rule Filter";
+    begin
+        DistributionRuleFilter.Get(Rec."Entry No.");
+        if (DistributionRuleFilter."Dist Single Line Amount" = true) then
+            IsAmountAllocatedEditable := true
+        else
+            IsAmountAllocatedEditable := false;
+        // CalculateTotalAmount()
+    end;
+
     var
         TotalAmount: Decimal;
+        IsAmountAllocatedEditable: Boolean;
 }

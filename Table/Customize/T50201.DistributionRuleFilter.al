@@ -232,13 +232,6 @@ table 50201 "Distribution Rule Filter"
         }
     }
 
-    trigger OnDelete()
-    var
-        myInt: Integer;
-    begin
-
-    end;
-
     var
         UserCustManage: Codeunit "User Customize Manage";
         GLAccNo: Code[20];
