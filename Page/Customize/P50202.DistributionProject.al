@@ -44,10 +44,114 @@ page 50202 "Distribution Project"
                 {
                     ToolTip = 'Specifies the value of the G/L Account No. field.';
                 }
+
+                field("Line No."; Rec."Line No.")
+                {
+                    ToolTip = 'Specifies the Line value of Distribution Project';
+                }
             }
         }
     }
+    actions
+    {
+        area(Processing)
+        {
+            action("Branch Distributions")
+            {
+                ApplicationArea = All;
+                Image = AmountByPeriod;
+                Visible = IsVisibleBranchDistributions;
+                ToolTip = 'Specifies the Value When you click Branch Distributions Action after Create the Project Lines';
+                trigger OnAction()
+                begin
+                    UserCustomizeManage.DistributeAmountbasedOnBranch(Rec."Entry No.");
+                end;
+            }
+            action("Allocation Employee Amount Upload")
+            {
+                ApplicationArea = All;
+                Image = UpdateXML;
+                trigger OnAction()
+                var
+                    DisRuleFilter: Record "Distribution Rule Filter";
+                    DistributionProject: Record "Distribution Project";
+                    GLEntry: Record "G/L Entry";
+                    UserCustManage: Codeunit "User Customize Manage";
+                begin
+                    IsVisibleBranchDistributions := false;
+                    DistributionProject.Copy(Rec);
+                    If (DisRuleFilter.Get(Rec."Entry No.") = false) then
+                        exit;
+                    if ((DisRuleFilter."Dimension Value One" <> '') and (DisRuleFilter."Distribution Amount One" = 0)) then
+                        Error('Distribution Amount One %1 Must not be Zero Please add Value', DisRuleFilter."Distribution Amount One")
+                    else
+                        if ((DisRuleFilter."Dimension Value Two" <> '') and (DisRuleFilter."Distribution Amount Two" = 0)) then
+                            Error('Distribution Amount Two %1 Must not be Zero Please add Value', DisRuleFilter."Distribution Amount Two")
+                        else
+                            if ((DisRuleFilter."Dimension Value Three" <> '') and (DisRuleFilter."Distribution Amount Three" = 0)) then
+                                Error('Distribution Amount Three %1 Must not be Zero Please add Value', DisRuleFilter."Distribution Amount Three")
+                            else
+                                if ((DisRuleFilter."Dimension Value Four" <> '') and (DisRuleFilter."Distribution Amount Four" = 0)) then
+                                    Error('Distribution Amount Four %1 Must not be Zero Please add Value', DisRuleFilter."Distribution Amount Four")
+                                else
+                                    if ((DisRuleFilter."Dimension Value Five" <> '') and (DisRuleFilter."Distribution Amount Five" = 0)) then
+                                        Error('Distribution Amount Five %1 Must not be Zero Please add Value', DisRuleFilter."Distribution Amount Five")
+                                    else
+                                        UserCustManage.UploadDistributionProjectFromExcel(DistributionProject);
 
+                    GLEntry.Get(Rec."Entry No.");
+                    CalRemAmount(GLEntry);
+                    if RemAmount = 0 then
+                        UserCustManage.UpdateGLEntryApplied(GLEntry."Document No.", DisRuleFilter."Dimension Value",
+                             GLEntry."Global Dimension 1 Code", DisRuleFilter."G/L Account No.");
+                    CurrPage.Update(true);
+                end;
 
+            }
+
+            action("Single Line Amount Updated")
+            {
+                ApplicationArea = All;
+                Image = Balance;
+
+                trigger OnAction()
+                var
+                    GLEntry: Record "G/L Entry";
+                    DistributionRuleFilter: Record "Distribution Rule Filter";
+                begin
+                    UserCustomizeManage.InDistributionRuleAmountShouldBeUpdatedOnSingleLine(Rec);
+                    if (GLEntry.Get(Rec."Entry No.") = false) then
+                        exit;
+
+                    CalRemAmount(GLEntry);
+                end;
+            }
+        }
+    }
+    trigger OnOpenPage()
+    begin
+        IsVisibleBranchDistributions := true;
+    end;
+
+    local procedure CalRemAmount(GLEntry: Record "G/L Entry")
+    var
+        DistributionRule: Record "Distribution Rule";
+        DistributionProject: Record "Distribution Project";
+    begin
+        Clear(DistributionProject);
+        DistributionProject.SetRange("Entry No.", GLEntry."Entry No.");
+        DistributionProject.CalcSums("Project Amount");
+        Amount := DistributionProject."Project Amount";
+        Clear(DistributionRule);
+        DistributionRule.SetRange("Entry No.", GLEntry."Entry No.");
+        DistributionRule.CalcSums("Amount Allocated");
+        RemAmount := Amount - DistributionRule."Amount Allocated";
+    end;
+
+    var
+        UserCustomizeManage: Codeunit "User Customize Manage";
+        Amount: Decimal;
+        RemAmount: Decimal;
+        IsVisibleBranchDistributions: Boolean;
 
 }

@@ -10,7 +10,7 @@ report 50201 "Distribution Analysis"
         dataitem(DistributionRule; "Distribution Rule")
         {
             RequestFilterFields = "Posting Date", "G/L Account No.", "Shortcut Dimension 2 Code",
-                 "Shortcut Dimension 3 Code", "Shortcut Dimension 1 Code";
+                 "Shortcut Dimension 3 Code", "Shortcut Dimension 1 Code" /*"Entry No.", "Document No."*/;
 
             trigger OnPreDataItem()
             begin
@@ -117,14 +117,6 @@ report 50201 "Distribution Analysis"
             end;
         }
     }
-    var
-        CompInfo: Record "Company Information";
-        GLEntry: Record "G/L Entry";
-        TempDistRule: Record "Distribution Rule" temporary;
-        TxtFilter: Text;
-        EmpName: Text[100];
-        GLAccName: Text[100];
-        Inx: Integer;
 
     local procedure InitGLEntryTemp()
     begin
@@ -157,4 +149,14 @@ report 50201 "Distribution Analysis"
         TempDistRule."Amount Allocated" := DistributionRule."Amount Allocated";
         TempDistRule.Insert();
     end;
+
+    var
+        CompInfo: Record "Company Information";
+        GLEntry: Record "G/L Entry";
+        TempDistRule: Record "Distribution Rule" temporary;
+        TempDistributionPrjectLine: Record "Distribution Project Line" temporary;
+        TxtFilter: Text;
+        EmpName: Text[100];
+        GLAccName: Text[100];
+        Inx: Integer;
 }
