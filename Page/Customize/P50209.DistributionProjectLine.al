@@ -6,7 +6,6 @@ page 50209 "Distribution Project Line"
     SourceTable = "Distribution Project Line";
     SourceTableView = sorting("Entry No.", "Line No.");
     DelayedInsert = true;
-    AutoSplitKey = true;
     MultipleNewLines = true;
     LinksAllowed = false;
     InsertAllowed = false;
