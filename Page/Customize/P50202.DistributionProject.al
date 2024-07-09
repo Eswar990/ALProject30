@@ -119,7 +119,12 @@ page 50202 "Distribution Project"
                     GLEntry: Record "G/L Entry";
                     DistributionRuleFilter: Record "Distribution Rule Filter";
                 begin
-                    UserCustomizeManage.InDistributionRuleAmountShouldBeUpdatedOnSingleLine(Rec);
+                    if (DistributionRuleFilter.Get(Rec."Entry No.") = true) then
+                        if (DistributionRuleFilter."Dist Single Line Amount" = true) then
+                            UserCustomizeManage.InDistributionRuleAmountShouldBeUpdatedOnSingleLine(Rec)
+                        else
+                            Error('Distribution Single Line Amount must be True');
+
                     if (GLEntry.Get(Rec."Entry No.") = false) then
                         exit;
 

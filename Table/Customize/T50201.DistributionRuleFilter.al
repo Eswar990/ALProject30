@@ -26,8 +26,6 @@ table 50201 "Distribution Rule Filter"
             Caption = 'Dimension Value';
             TableRelation = "Dimension Value".Code where("Dimension Code" = field("Dimension Filter"));
             trigger OnValidate()
-            var
-                UserCustManage: Codeunit "User Customize Manage";
             begin
                 UserCustManage.CreateProjectDistRuleFilter(Rec."Entry No.", Rec."Dimension Value", xRec."Dimension Value", Rec."G/L Account No.");
             end;
@@ -38,8 +36,6 @@ table 50201 "Distribution Rule Filter"
             Caption = 'Distribution Method';
             OptionMembers = " ",/*Equally,Proportion,*/Manually;
             trigger OnValidate()
-            var
-                UserCustManage: Codeunit "User Customize Manage";
             begin
                 UserCustManage.CheckDistRuleExist(Rec."Entry No.");
             end;
@@ -89,13 +85,52 @@ table 50201 "Distribution Rule Filter"
 
                 if ((Rec."Distribution Method" = Rec."Distribution Method"::Manually)) then begin
                     if ("Distribution Setup" = true) then begin
-                        if (("Dimension Value One" <> '')) then
-                            UserCustManage.CreateProjectDistFromDistributionLine(Rec."Entry No.", Rec."Dimension Value One", xRec."Dimension Value One", Rec."G/L Account No.", 1);
-                    end else begin
-                        if "Dimension Value One" = '' then
-                            "Distribution Amount One" := 0;
-                        UserCustManage.CreateProjectDistRuleFilter(Rec."Entry No.", Rec."Dimension Value One", xRec."Dimension Value One", Rec."G/L Account No.");
-                    end;
+                        if (Rec."Sales Invoice" = true) then begin
+                            if ((Rec."Distribution Options" = Rec."Distribution Options"::"Single Project") or (Rec."Distribution Options" = Rec."Distribution Options"::"Multiple Project")) then begin
+                                if (("Dimension Value One" <> '')) then
+                                    UserCustManage.CreateProjectDistFromDistributionLine(Rec."Entry No.", Rec."Dimension Value One", xRec."Dimension Value One", Rec."G/L Account No.", 1)
+                                else begin
+                                    if ((Rec."Dimension Value One" <> Rec."Dimension Value Two") or (Rec."Dimension Value One" <> Rec."Dimension Value Three") or (Rec."Dimension Value One" <> Rec."Dimension Value Four") or (Rec."Dimension Value One" <> Rec."Dimension Value Five")) then begin
+                                        IsBoolean := UserCustManage.DeleteAndSendErrorDistributionProjectAndDistributionRuleLines(Rec."Entry No.", xRec."Dimension Value One", 0);
+                                        if (IsBoolean = false) then
+                                            Error('%1 Dimension value already exist', "Dimension Value One");
+                                    end;
+
+                                    Clear(IsBoolean);
+                                    if (xRec."Dimension Value One" <> Rec."Dimension Value One") then begin
+                                        IsBoolean := UserCustManage.DeleteAndSendErrorDistributionProjectAndDistributionRuleLines(Rec."Entry No.", xRec."Dimension Value One", 1);
+                                        if (IsBoolean = false) then
+                                            Message('Distribution Project and Distribution Rule Lines are Deleted');
+                                    end;
+
+                                    Clear(IsBoolean);
+                                end;
+                            end else
+                                Error('Please Fill Distribution Options Either Single Project Or Multiple Project');
+                        end else begin
+                            if (Rec."Sales Invoice" = false) then begin
+                                if (("Dimension Value One" <> '')) then
+                                    UserCustManage.CreateProjectDistFromDistributionLine(Rec."Entry No.", Rec."Dimension Value One", xRec."Dimension Value One", Rec."G/L Account No.", 1)
+                                else begin
+                                    if ((Rec."Dimension Value One" <> Rec."Dimension Value Two") or (Rec."Dimension Value One" <> Rec."Dimension Value Three") or (Rec."Dimension Value One" <> Rec."Dimension Value Four") or (Rec."Dimension Value One" <> Rec."Dimension Value Five")) then begin
+                                        IsBoolean := UserCustManage.DeleteAndSendErrorDistributionProjectAndDistributionRuleLines(Rec."Entry No.", xRec."Dimension Value One", 0);
+                                        if (IsBoolean = false) then
+                                            Error('%1 Dimension value already exist', "Dimension Value One");
+                                    end;
+
+                                    Clear(IsBoolean);
+                                    if (xRec."Dimension Value One" <> Rec."Dimension Value One") then begin
+                                        IsBoolean := UserCustManage.DeleteAndSendErrorDistributionProjectAndDistributionRuleLines(Rec."Entry No.", xRec."Dimension Value One", 1);
+                                        if (IsBoolean = false) then
+                                            Message('Distribution Project and Distribution Rule Lines are Deleted');
+                                    end;
+
+                                    Clear(IsBoolean);
+                                end;
+                            end;
+                        end;
+                    end else
+                        Error('Distribution Setup Must be True');
                 end else
                     Error('Please Fill Distribution Method Manually');
             end;
@@ -116,13 +151,52 @@ table 50201 "Distribution Rule Filter"
 
                 if ((Rec."Distribution Method" = Rec."Distribution Method"::Manually)) then begin
                     if ("Distribution Setup" = true) then begin
-                        if ("Dimension Value Two" <> '') then
-                            UserCustManage.CreateProjectDistFromDistributionLine(Rec."Entry No.", Rec."Dimension Value Two", xRec."Dimension Value Two", Rec."G/L Account No.", 2);
-                    end else begin
-                        if "Dimension Value Two" = '' then
-                            "Distribution Amount Two" := 0;
-                        UserCustManage.CreateProjectDistRuleFilter(Rec."Entry No.", Rec."Dimension Value Two", xRec."Dimension Value Two", Rec."G/L Account No.");
-                    end;
+                        if (Rec."Sales Invoice" = true) then begin
+                            if ((Rec."Distribution Options" = Rec."Distribution Options"::"Single Project") or (Rec."Distribution Options" = Rec."Distribution Options"::"Multiple Project")) then begin
+                                if (("Dimension Value Two" <> '')) then
+                                    UserCustManage.CreateProjectDistFromDistributionLine(Rec."Entry No.", Rec."Dimension Value Two", xRec."Dimension Value Two", Rec."G/L Account No.", 2)
+                                else begin
+                                    if ((Rec."Dimension Value Two" <> Rec."Dimension Value One") or (Rec."Dimension Value Two" <> Rec."Dimension Value Three") or (Rec."Dimension Value Two" <> Rec."Dimension Value Four") or (Rec."Dimension Value Two" <> Rec."Dimension Value Five")) then begin
+                                        IsBoolean := UserCustManage.DeleteAndSendErrorDistributionProjectAndDistributionRuleLines(Rec."Entry No.", xRec."Dimension Value Two", 0);
+                                        if (IsBoolean = false) then
+                                            Error('%1 Dimension value already exist', "Dimension Value Two");
+                                    end;
+
+                                    Clear(IsBoolean);
+                                    if (xRec."Dimension Value Two" <> Rec."Dimension Value Two") then begin
+                                        IsBoolean := UserCustManage.DeleteAndSendErrorDistributionProjectAndDistributionRuleLines(Rec."Entry No.", xRec."Dimension Value Two", 1);
+                                        if (IsBoolean = false) then
+                                            Message('Distribution Project and Distribution Rule Lines are Deleted');
+                                    end;
+
+                                    Clear(IsBoolean);
+                                end;
+                            end else
+                                Error('Please Fill Distribution Options Either Single Project Or Multiple Project');
+                        end else begin
+                            if (Rec."Sales Invoice" = false) then begin
+                                if (("Dimension Value Two" <> '')) then
+                                    UserCustManage.CreateProjectDistFromDistributionLine(Rec."Entry No.", Rec."Dimension Value Two", xRec."Dimension Value Two", Rec."G/L Account No.", 2)
+                                else begin
+                                    if ((Rec."Dimension Value Two" <> Rec."Dimension Value One") or (Rec."Dimension Value Two" <> Rec."Dimension Value Three") or (Rec."Dimension Value Two" <> Rec."Dimension Value Four") or (Rec."Dimension Value Two" <> Rec."Dimension Value Five")) then begin
+                                        IsBoolean := UserCustManage.DeleteAndSendErrorDistributionProjectAndDistributionRuleLines(Rec."Entry No.", xRec."Dimension Value Two", 0);
+                                        if (IsBoolean = false) then
+                                            Error('%1 Dimension value already exist', "Dimension Value Two");
+                                    end;
+
+                                    Clear(IsBoolean);
+                                    if (xRec."Dimension Value Two" <> Rec."Dimension Value Two") then begin
+                                        IsBoolean := UserCustManage.DeleteAndSendErrorDistributionProjectAndDistributionRuleLines(Rec."Entry No.", xRec."Dimension Value Two", 1);
+                                        if (IsBoolean = false) then
+                                            Message('Distribution Project and Distribution Rule Lines are Deleted');
+                                    end;
+
+                                    Clear(IsBoolean);
+                                end;
+                            end;
+                        end;
+                    end else
+                        Error('Distribution Setup Must be True');
                 end else
                     Error('Please Fill Distribution Method Manually');
             end;
@@ -143,13 +217,24 @@ table 50201 "Distribution Rule Filter"
 
                 if ((Rec."Distribution Method" = Rec."Distribution Method"::Manually)) then begin
                     if ("Distribution Setup" = true) then begin
-                        if ("Dimension Value Three" <> '') then
-                            UserCustManage.CreateProjectDistFromDistributionLine(Rec."Entry No.", Rec."Dimension Value Three", xRec."Dimension Value Three", Rec."G/L Account No.", 3);
-                    end else begin
-                        if "Dimension Value Three" = '' then
-                            "Distribution Amount Three" := 0;
-                        UserCustManage.CreateProjectDistRuleFilter(Rec."Entry No.", Rec."Dimension Value Three", xRec."Dimension Value Three", Rec."G/L Account No.");
-                    end;
+                        if (Rec."Sales Invoice" = true) then begin
+                            if ((Rec."Distribution Options" = Rec."Distribution Options"::"Single Project") or (Rec."Distribution Options" = Rec."Distribution Options"::"Multiple Project")) then begin
+                                if (("Dimension Value Three" <> '')) then
+                                    UserCustManage.CreateProjectDistFromDistributionLine(Rec."Entry No.", Rec."Dimension Value Three", xRec."Dimension Value Three", Rec."G/L Account No.", 3)
+                                else
+                                    Error('Distribution Value One Must be a Value');
+                            end else
+                                Error('Please Fill Distribution Options Either Single Project Or Multiple Project');
+                        end else begin
+                            if (Rec."Sales Invoice" = false) then begin
+                                if (("Dimension Value Three" <> '')) then
+                                    UserCustManage.CreateProjectDistFromDistributionLine(Rec."Entry No.", Rec."Dimension Value Three", xRec."Dimension Value Three", Rec."G/L Account No.", 3)
+                                else
+                                    Error('Distribution Value One Must be a Value');
+                            end;
+                        end;
+                    end else
+                        Error('Distribution Setup Must be True');
                 end else
                     Error('Please Fill Distribution Method Manually');
             end;
@@ -170,13 +255,24 @@ table 50201 "Distribution Rule Filter"
 
                 if ((Rec."Distribution Method" = Rec."Distribution Method"::Manually)) then begin
                     if ("Distribution Setup" = true) then begin
-                        if ("Dimension Value Four" <> '') then
-                            UserCustManage.CreateProjectDistFromDistributionLine(Rec."Entry No.", Rec."Dimension Value Four", xRec."Dimension Value Four", Rec."G/L Account No.", 4);
-                    end else begin
-                        if "Dimension Value Four" = '' then
-                            "Distribution Amount Four" := 0;
-                        UserCustManage.CreateProjectDistRuleFilter(Rec."Entry No.", Rec."Dimension Value Four", xRec."Dimension Value Four", Rec."G/L Account No.");
-                    end;
+                        if (Rec."Sales Invoice" = true) then begin
+                            if ((Rec."Distribution Options" = Rec."Distribution Options"::"Single Project") or (Rec."Distribution Options" = Rec."Distribution Options"::"Multiple Project")) then begin
+                                if (("Dimension Value Four" <> '')) then
+                                    UserCustManage.CreateProjectDistFromDistributionLine(Rec."Entry No.", Rec."Dimension Value Four", xRec."Dimension Value Four", Rec."G/L Account No.", 4)
+                                else
+                                    Error('Distribution Value One Must be a Value');
+                            end else
+                                Error('Please Fill Distribution Options Either Single Project Or Multiple Project');
+                        end else begin
+                            if (Rec."Sales Invoice" = false) then begin
+                                if (("Dimension Value Four" <> '')) then
+                                    UserCustManage.CreateProjectDistFromDistributionLine(Rec."Entry No.", Rec."Dimension Value Four", xRec."Dimension Value Four", Rec."G/L Account No.", 4)
+                                else
+                                    Error('Distribution Value One Must be a Value');
+                            end;
+                        end;
+                    end else
+                        Error('Distribution Setup Must be True');
                 end else
                     Error('Please Fill Distribution Method Manually');
             end;
@@ -197,13 +293,24 @@ table 50201 "Distribution Rule Filter"
 
                 if ((Rec."Distribution Method" = Rec."Distribution Method"::Manually)) then begin
                     if ("Distribution Setup" = true) then begin
-                        if ("Dimension Value Five" <> '') then
-                            UserCustManage.CreateProjectDistFromDistributionLine(Rec."Entry No.", Rec."Dimension Value Five", xRec."Dimension Value Five", Rec."G/L Account No.", 4);
-                    end else begin
-                        if "Dimension Value Four" = '' then
-                            "Distribution Amount Four" := 0;
-                        UserCustManage.CreateProjectDistRuleFilter(Rec."Entry No.", Rec."Dimension Value Five", xRec."Dimension Value Five", Rec."G/L Account No.");
-                    end;
+                        if (Rec."Sales Invoice" = true) then begin
+                            if ((Rec."Distribution Options" = Rec."Distribution Options"::"Single Project") or (Rec."Distribution Options" = Rec."Distribution Options"::"Multiple Project")) then begin
+                                if (("Dimension Value One" <> '')) then
+                                    UserCustManage.CreateProjectDistFromDistributionLine(Rec."Entry No.", Rec."Dimension Value Five", xRec."Dimension Value Five", Rec."G/L Account No.", 5)
+                                else
+                                    Error('Distribution Value One Must be a Value');
+                            end else
+                                Error('Please Fill Distribution Options Either Single Project Or Multiple Project');
+                        end else begin
+                            if (Rec."Sales Invoice" = false) then begin
+                                if (("Dimension Value One" <> '')) then
+                                    UserCustManage.CreateProjectDistFromDistributionLine(Rec."Entry No.", Rec."Dimension Value Five", xRec."Dimension Value Five", Rec."G/L Account No.", 5)
+                                else
+                                    Error('Distribution Value One Must be a Value');
+                            end;
+                        end;
+                    end else
+                        Error('Distribution Setup Must be True');
                 end else
                     Error('Please Fill Distribution Method Manually');
             end;
@@ -223,6 +330,16 @@ table 50201 "Distribution Rule Filter"
         {
             Caption = 'Distribution Single Line Amount';
         }
+
+        field(55; "Distribution Options"; Option)
+        {
+            Caption = 'Distribution Options';
+            OptionMembers = "Single Project","Multiple Project";
+            trigger OnValidate()
+            begin
+
+            end;
+        }
     }
     keys
     {
@@ -235,4 +352,5 @@ table 50201 "Distribution Rule Filter"
     var
         UserCustManage: Codeunit "User Customize Manage";
         GLAccNo: Code[20];
+        IsBoolean: Boolean;
 }

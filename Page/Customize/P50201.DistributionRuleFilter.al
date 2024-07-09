@@ -93,6 +93,10 @@ page 50201 "Distribution Rule Filter"
                 {
                     ToolTip = 'Specifies the value of the Distribution Single Line Amount';
                 }
+                field("Distribution Options"; Rec."Distribution Options")
+                {
+                    ToolTip = 'Specifies the value of the Distribution Options';
+                }
             }
             group("Branch Distribution")
             {
@@ -466,6 +470,7 @@ page 50201 "Distribution Rule Filter"
                     Distributionproject: Record "Distribution Project";
                     AzzDistributionRule: Record "Distribution Rule";
                     DistributionLine: Record "Distribution Line";
+                    DistributionProjectLine: Record "Distribution Project Line";
                     LineNo: Integer;
                     RoundTotalProjectAmount: Decimal;
                     TotalProjectAmount: Decimal;
@@ -495,7 +500,9 @@ page 50201 "Distribution Rule Filter"
                                 until AzzDistributionRule.Next() = 0;
 
                             RoundTotalProjectAmount += Distributionproject."Project Amount";
+                            UserCustomizedmanage.DistributionProjectLineAmountUpdatedThroughDistributionProjectAmount(Distributionproject);
                         until Distributionproject.Next() = 0;
+
                     UserCustomizedmanage.CalculateAndUpdateRemainingAmountonDistributionLines(GLEntry);
                     if (Rec."Dist Single Line Amount" = false) then
                         UserCustomizedmanage.CombineProjectCodeAndAmount(AzzDistributionRule, Distributionproject);
@@ -557,7 +564,6 @@ page 50201 "Distribution Rule Filter"
 
         GLEntry.Get(Rec."Entry No.");
         CalRemAmount(GLEntry);
-
         if (GLEntry."Distributio Rule Applied" = true) then begin
             FieldDimVEdit := false;
             IsEditableDistributionLinkParts := false;
@@ -569,10 +575,10 @@ page 50201 "Distribution Rule Filter"
             FieldEditable := false;
             IsFieldEditableDistributionMethod := false;
             if Rec."Distribution Amount" = 0 then
-                Rec."Distribution Amount" := Rec."G/L Amount";
+                Rec."Distribution Amount" := GLEntry."Credit Amount"
         end
         else
-            Rec."Distribution Amount" := Rec."G/L Amount";
+            Rec."Distribution Amount" := GLEntry."Debit Amount";
 
         if not Rec."Sales Invoice" then
             if Rec."Dimension Filter Exsist" then begin
@@ -604,7 +610,6 @@ page 50201 "Distribution Rule Filter"
 
         if (Rec."Dist Single Line Amount" = false) then
             IsVisibleDistributionRule := true;
-
         Rec.Modify();
         CurrPage.DistributionRule.Page.UpdateAmount(Amount, RemAmount);
     end;
@@ -612,6 +617,14 @@ page 50201 "Distribution Rule Filter"
     trigger OnQueryClosePage(CloseAction: Action): Boolean
     var
         GLEntry: Record "G/L Entry";
+        DistributionProjectLine: Record "Distribution Project Line";
+        DistributionRule: Record "Distribution Rule";
+        DistributionProject: Record "Distribution Project";
+        DistributionProjectLineAmount: Decimal;
+        DistributionRuleAmount: Decimal;
+        DistributionProjectAmount: Decimal;
+        IsBooleanProjectLinesAreNotUpdated: Boolean;
+        Result: Decimal;
     begin
         GLEntry.Get(Rec."Entry No.");
         CalRemAmount(GLEntry);
@@ -619,12 +632,25 @@ page 50201 "Distribution Rule Filter"
             Message('Distribution amount not fully applied.');
             UserCustomizedmanage.UpdateGLEntryUnApplied(GLEntry."Document No.", GLEntry."Global Dimension 2 Code",
                 GLEntry."Global Dimension 1 Code", Rec."G/L Account No.");
-        end
-        else
-            if not UserCustomizedmanage.CheckDistProjectExist(Rec."Entry No.") then
+        end else begin
+            if (Rec."Sales Invoice" = true) then
+                Result := UserCustomizedmanage.CheckBeforeClosingDistributionProjectLinePageAmoutIsUpdateOrNot(Rec);
+
+            if (UserCustomizedmanage.CheckDistProjectExist(Rec."Entry No.") = false) then begin
                 UserCustomizedmanage.UpdateGLEntryUnApplied(GLEntry."Document No.", GLEntry."Global Dimension 2 Code",
                      GLEntry."Global Dimension 1 Code", Rec."G/L Account No.");
+            end else begin
+                if (Result = 0) then begin
+                    IsBooleanProjectLinesAreNotUpdated := true;
+                    Message('Please Check the Distribution Project Lines and Amout is Updted are not');
+                end else
+                    UserCustomizedmanage.UpdateGLEntryApplied(GLEntry."Document No.", GLEntry."Global Dimension 2 Code",
+                        GLEntry."Global Dimension 1 Code", Rec."G/L Account No.");
+            end;
+        end;
 
+        if (IsBooleanProjectLinesAreNotUpdated = false) then
+            CurrPage.Update(true);
     end;
 
     procedure InitPageDetails(var GLEntry: Record "G/L Entry")
