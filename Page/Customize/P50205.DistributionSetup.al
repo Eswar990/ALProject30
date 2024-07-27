@@ -109,4 +109,21 @@ page 50205 "Distribution Setup"
         Rec."Previous Month" := '';
         Rec.Modify();
     end;
+
+    trigger OnOpenPage()
+    var
+        myInt: Integer;
+    begin
+        Rec.Reset();
+        if not Rec.Get() then begin
+            Rec.Init();
+            Rec.Insert();
+        end;
+
+    end;
+
+    var
+        xGeneralLedgerSetup: Record "General Ledger Setup";
+        EditableBoolean: Boolean;
+        GenLedSet: Page "General Ledger Setup";
 }

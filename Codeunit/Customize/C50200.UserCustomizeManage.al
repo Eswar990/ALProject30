@@ -223,7 +223,8 @@ codeunit 50200 "User Customize Manage"
         DimensionValueCode: Code[20];
         ProjectCode: Boolean;
     begin
-        CreateDistributionYearAndDate(GLEntry."Entry No.");
+        DistributionYear := GetDistributionYear(GLEntry."Entry No.");
+        DistributionMonth := GetDistributionMonth(GLEntry."Entry No.");
         DistributionLine.SetRange("Shortcut Dimension 2 Code", RecDimensionValue);
         DistributionLine.SetRange(Year, DistributionYear);
         DistributionLine.SetRange(Month, DistributionMonth);
@@ -361,10 +362,6 @@ codeunit 50200 "User Customize Manage"
             Clear(DistRuleIncrementValue);
         end else begin
             DistributionRuleFilter.Get(GLEntry."Entry No.");
-            // CreateDistributionYearAndDate(GLEntry."Entry No.");
-            // DistributionLine.SetRange("Shortcut Dimension 2 Code", RecDimensionValue);
-            // DistributionLine.SetRange(Year, DistributionYear);
-            // DistributionLine.SetRange(Month, DistributionMonth);
             if (DistributionLine.FindSet(false) = true) then begin
                 repeat
                     Clear(DistributionProject);
@@ -589,7 +586,25 @@ codeunit 50200 "User Customize Manage"
         end;
     end;
 
-    procedure GetMonthAndYear(GlEntryNo: Integer)
+    procedure GetDistributionYear(GlEntryNo: Integer): Text
+    var
+        GlEntry: Record "G/L Entry";
+        DistributionPostingDate: Date;
+        PostingDate: Text;
+        Month: Text;
+        Year: Text;
+    begin
+        if (GlEntry.Get(GlEntryNo) = true) then begin
+            DistributionPostingDate := GLEntry."Posting Date";
+            PostingDate := Format(DistributionPostingDate); // 01/10/23
+            Year := CopyStr(PostingDate, 7, 8);
+            DistributionYear := InsStr(Year, '20', 1);
+        end;
+
+        exit(DistributionYear)
+    end;
+
+    procedure GetDistributionMonth(GlEntryNo: Integer): Text
     var
         GlEntry: Record "G/L Entry";
         DistributionPostingDate: Date;
@@ -601,10 +616,10 @@ codeunit 50200 "User Customize Manage"
             DistributionPostingDate := GLEntry."Posting Date";
             PostingDate := Format(DistributionPostingDate); // 01/10/23
             Month := CopyStr(PostingDate, 1, 2);
-            Year := CopyStr(PostingDate, 7, 8);
-            DistributionYear := InsStr(Year, '20', 1);
             DistributionMonth := ConvertingMonthAndYear(Month);
-        end
+        end;
+
+        exit(DistributionMonth);
     end;
 
     procedure ConvertingMonthAndYear(Month: Text): Text
@@ -775,21 +790,37 @@ codeunit 50200 "User Customize Manage"
             DistRule.Modify(false);
         end;
 
-        DeleteDistributionRuleLinesWhichAmountIsEqualToZero(EntryNo, DistRule);
         if (DistRuleFilter."Dist Single Line Amount" <> true) then
             CombineProjectCodeAndAmountThroughAlocationActionFromExcel(DistRule);
 
         Message('Allocation amount update process completed.');
     end;
 
-    local procedure DeleteDistributionRuleLinesWhichAmountIsEqualToZero(GLEntryNo: Integer; DistributionProject: Record "Distribution Rule")
+    procedure CopyDistributionRuleValues()
+    var
+        CopyDistributionRule: Record "Copy Distribution Rule";
+        DistributionRule: Record "Distribution Rule";
     begin
-        DistributionProject.SetRange("Entry No.", GLEntryNo);
-        if (DistributionProject.FindSet(false) = true) then
+        CopyDistributionRule.DeleteAll();
+        DistributionRule.Reset();
+        if (DistributionRule.FindSet(false) = true) then
             repeat
-                if (DistributionProject."Amount Allocated" = 0) then
-                    DistributionProject.Delete(false);
-            until DistributionProject.Next() = 0;
+                CopyDistributionRule.Init();
+                CopyDistributionRule."Entry No." := DistributionRule."Entry No.";
+                if (CopyDistributionRule.FindFirst() = true) then
+                    CopyDistributionRule."Line No." := CopyDistributionRule."Line No." + 1000
+                else
+                    CopyDistributionRule."Line No." := 1000;
+
+                CopyDistributionRule."Shortcut Dimension 1 Code" := DistributionRule."Shortcut Dimension 1 Code";
+                CopyDistributionRule."Shortcut Dimension 2 Code" := DistributionRule."Shortcut Dimension 2 Code";
+                CopyDistributionRule."Shortcut Dimension 3 Code" := DistributionRule."Shortcut Dimension 3 Code";
+                CopyDistributionRule."Document No." := DistributionRule."Document No.";
+                CopyDistributionRule."Amount Allocated" := DistributionRule."Amount Allocated";
+                CopyDistributionRule."Emp. Project Percentage" := DistributionRule."Emp. Project Percentage";
+                CopyDistributionRule."Emp. Project Count" := DistributionRule."Emp. Project Count";
+                CopyDistributionRule.Insert(false);
+            until DistributionRule.Next() = 0;
     end;
 
     procedure UploadDistributionProjectFromExcel(DistributionProject: Record "Distribution Project")
@@ -863,7 +894,6 @@ codeunit 50200 "User Customize Manage"
                 DistributionProject.Validate("Project Amount", SheetVal);
 
             DistributionProject.Modify(false);
-            Commit();
         end;
 
         DimensionTotalAmount := ((DistRuleFilter."Distribution Amount One") + (DistRuleFilter."Distribution Amount Two") + (DistRuleFilter."Distribution Amount Three") + (DistRuleFilter."Distribution Amount Four") + (DistRuleFilter."Distribution Amount Five"));
@@ -965,7 +995,7 @@ codeunit 50200 "User Customize Manage"
             repeat
                 DistributionTotalProjectAmount += DistributionProject."Project Amount";
             until DistributionProject.Next() = 0;
-        DeleteDistributionProjectLinesWhichAmountIsEqualToZero(DistributionProject."Entry No.", DistributionProject);
+        DeleteDistributionProjectLinesWhichAmountIsEqualToZero(DistributionProject."Entry No.", DistributionProject, 0);
 
         if (DistributionTotalProjectAmount <> DistRuleFilter."Distribution Amount") then begin
             Clear(AddDimensionValue);
@@ -975,16 +1005,47 @@ codeunit 50200 "User Customize Manage"
             if ((AddDimensionValue < DistRuleFilter."Distribution Amount") or (DistRuleFilter."Distribution Amount" < SubDimensionValue)) then
                 Error('Distribution Total Project Amount Must be equal to Distribution Amount');
         end;
+        Commit();
     end;
 
-    local procedure DeleteDistributionProjectLinesWhichAmountIsEqualToZero(GLEntryNo: Integer; DistributionProject: Record "Distribution Project")
+    procedure DeleteDistributionProjectLinesWhichAmountIsEqualToZero(GLEntryNo: Integer; DistributionProject: Record "Distribution Project"; Integer: Integer)
+    var
+        DistributionRuleFilter: Record "Distribution Rule Filter";
+        Amount: Decimal;
+        AddDistAmount: Decimal;
+        SubDistAmount: Decimal;
     begin
-        DistributionProject.SetRange("Entry No.", GLEntryNo);
-        if (DistributionProject.FindSet(false) = true) then
-            repeat
-                if (DistributionProject."Project Amount" = 0) then
-                    DistributionProject.Delete(false);
-            until DistributionProject.Next() = 0;
+        if (Integer = 0) then begin
+            DistributionProject.SetRange("Entry No.", GLEntryNo);
+            if (DistributionProject.FindSet(false) = true) then
+                repeat
+                    if (DistributionProject."Project Amount" = 0) then
+                        DistributionProject.Delete(false);
+                until DistributionProject.Next() = 0;
+        end else begin
+            DistributionProject.SetRange("Entry No.", GLEntryNo);
+            if (DistributionProject.FindSet(false) = true) then
+                repeat
+                    Amount += DistributionProject."Project Amount";
+                until DistributionProject.Next() = 0;
+
+            if (DistributionRuleFilter.Get(GLEntryNo) = false) then
+                exit;
+
+            if (Amount = 0) then
+                exit;
+
+            if (DistributionRuleFilter."Distribution Amount" <> Amount) then
+                AddDistAmount := DistributionRuleFilter."Distribution Amount" + 10;
+            SubDistAmount := DistributionRuleFilter."Distribution Amount" - 10;
+            if ((AddDistAmount >= Amount) or (Amount >= SubDistAmount)) then begin
+                if (DistributionProject.FindSet(false) = true) then
+                    repeat
+                        if (DistributionProject."Project Amount" = 0) then
+                            DistributionProject.Delete(false);
+                    until DistributionProject.Next() = 0;
+            end;
+        end;
     end;
 
     local procedure GetValueAtCell(var TempExcelBuffer: Record "Excel Buffer" temporary; RowNo: Integer; ColNo: Integer): Text
@@ -1423,26 +1484,6 @@ codeunit 50200 "User Customize Manage"
         Message('Excel update process completed.');
     end;
 
-    procedure CreateDistributionYearAndDate(EntryNo: Integer)
-    var
-        DistributionLine: Record "Distribution Line";
-        GLEntry: Record "G/L Entry";
-        DistributionPostingDate: Date;
-        PostingDate: Text;
-        Month: Text;
-        Year: Text;
-    begin
-        if (GLEntry.Get(EntryNo) = false) then
-            exit;
-
-        DistributionPostingDate := GLEntry."Posting Date";
-        PostingDate := Format(DistributionPostingDate);// 01/10/23
-        Month := CopyStr(PostingDate, 1, 2);
-        Year := CopyStr(PostingDate, 7, 8);
-        DistributionYear := InsStr(Year, '20', 1);
-        DistributionMonth := ConvertingMonthAndYear(Month);
-    end;
-
     procedure InsertDistributionRuleLineFromDistributionSetup(var DistributionruleFilter: Record "Distribution Rule Filter"; var DistributionRule: Record "Distribution Rule"; var DistributionLines: Record "Distribution Line"; DistributionRuleLineNo: Integer): Integer
     var
         RuleIncrement: Integer;
@@ -1563,6 +1604,7 @@ codeunit 50200 "User Customize Manage"
         BranchCodeList2: List of [Text];
         ProjectCodeList: List of [Text];
         ProjectCodeList2: List of [Text];
+        // DistributionAmountAllocated: Decimal;
         ProjectIntegerList: Integer;
         IntegerOfList: Integer;
         IntegerOfListTwo: Integer;
@@ -1575,10 +1617,17 @@ codeunit 50200 "User Customize Manage"
         if (DistributionRulefilter.Get(DistributionProject."Entry No.") = false) then
             exit;
 
-        if (DistributionRulefilter."Sales Invoice" = false) then
-            exit;
+        // if (DistributionRulefilter."Sales Invoice" = false) then
+        //     exit;
+        // DistributionRule.SetRange("Entry No.", DistributionRulefilter."Entry No.");
+        // if (DistributionRule.FindSet(false) = true) then
+        //     repeat
+        //         DistributionAmountAllocated += DistributionRule."Amount Allocated";
+        //     until DistributionProject.Next() = 0;
 
-        DeleteUnnecessaryLinesInDistributionRule(DistributionRule, DistributionProject, DistributionRulefilter);
+        // if (DistributionAmountAllocated <> 0) then
+        // DeleteUnnecessaryLinesInDistributionRule(DistributionRule, DistributionProject, DistributionRulefilter);
+
         DistributionRule.Reset();
         DistributionRule.SetRange("Entry No.", DistributionProject."Entry No.");
         if (DistributionRule.FindSet(false) = true) then
@@ -1633,29 +1682,30 @@ codeunit 50200 "User Customize Manage"
             Clear(ProjectCodeList2);
             Clear(ProjectCodeList);
         end;
+        // DeleteUnnecessaryLinesInDistributionRule(DistributionRule, DistributionProject, DistributionRulefilter);
     end;
 
-    local procedure DeleteUnnecessaryLinesInDistributionRule(DistributionRule: Record "Distribution Rule"; DistributionProject: Record "Distribution Project"; DistributionRulefilter: Record "Distribution Rule Filter")
-    var
-        DistributionRuleAmountAllocated: Decimal;
-    begin
-        DistributionRule.Reset();
-        DistributionRule.SetRange("Entry No.", DistributionProject."Entry No.");
-        if (DistributionRule.FindSet(false) = true) then
-            repeat
-                DistributionRuleAmountAllocated += DistributionRule."Amount Allocated";
-            until DistributionRule.Next() = 0;
+    // local procedure DeleteUnnecessaryLinesInDistributionRule(DistributionRule: Record "Distribution Rule"; DistributionProject: Record "Distribution Project"; DistributionRulefilter: Record "Distribution Rule Filter")
+    // var
+    //     DistributionRuleAmountAllocated: Decimal;
+    // begin
+    //     DistributionRule.Reset();
+    //     DistributionRule.SetRange("Entry No.", DistributionProject."Entry No.");
+    //     if (DistributionRule.FindSet(false) = true) then
+    //         repeat
+    //             DistributionRuleAmountAllocated += DistributionRule."Amount Allocated";
+    //         until DistributionRule.Next() = 0;
 
-        if (DistributionRuleAmountAllocated = DistributionRulefilter."Distribution Amount") then begin
-            DistributionRule.Reset();
-            DistributionRule.SetRange("Entry No.", DistributionProject."Entry No.");
-            if (DistributionRule.FindSet(false) = true) then
-                repeat
-                    if (DistributionRule."Amount Allocated" = 0) then
-                        DistributionRule.Delete(false);
-                until DistributionRule.Next() = 0;
-        end;
-    end;
+    //     if (DistributionRuleAmountAllocated = DistributionRulefilter."Distribution Amount") then begin
+    //         DistributionRule.Reset();
+    //         DistributionRule.SetRange("Entry No.", DistributionProject."Entry No.");
+    //         if (DistributionRule.FindSet(false) = true) then
+    //             repeat
+    //                 if (DistributionRule."Amount Allocated" = 0) then
+    //                     DistributionRule.Delete(false);
+    //             until DistributionRule.Next() = 0;
+    //     end;
+    // end;
 
     procedure DistributionProjectLineAmountUpdatedThroughDistributionProjectAmount(var DistributionProject: Record "Distribution Project")
     var

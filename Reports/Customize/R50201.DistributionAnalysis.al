@@ -36,7 +36,7 @@ report 50201 "Distribution Analysis"
                     CurrReport.Skip();
                 if "Shortcut Dimension 1 Code" = '' then
                     CurrReport.Skip();
-                InitDistRuleTemp();
+                InitDistributiomRuleTemp();
             end;
 
             trigger OnPostDataItem()
@@ -89,7 +89,11 @@ report 50201 "Distribution Analysis"
             {
 
             }
-            column(TempDistRuleDebit; TempDistRule."Amount Allocated")
+            column(TempDistRuleDebit; DebitAmountAllocated)
+            {
+
+            }
+            column(TempDistRuleCredit; CreditAmountAllocated)
             {
 
             }
@@ -97,23 +101,57 @@ report 50201 "Distribution Analysis"
             {
 
             }
+            column(TotalAmount; TotalAmount)
+            {
+
+            }
+            column(DebitAmountAllocated2; DebitAmountAllocated2)
+            {
+
+            }
+            column(CreditAmountAllocated2; CreditAmountAllocated2)
+            {
+
+            }
             trigger OnAfterGetRecord()
             var
                 DimValue: Record "Dimension Value";
+                DistributionRules: Record "Distribution Rule";
             begin
                 Clear(GLAccName);
                 Clear(EmpName);
                 if Number = 1 then begin
-                    if not TempDistRule.FindSet() then
+                    if (TempDistRule.FindSet(false) = false) then
                         CurrReport.Break();
                 end else
-                    if TempDistRule.Next() = 0 then
+                    if (TempDistRule.Next() = 0) then
                         CurrReport.Break();
+
                 Clear(GLEntry);
+                Clear(DebitAmountAllocated);
+                Clear(CreditAmountAllocated);
+
                 GLEntry.Get(TempDistRule."Entry No.");
                 GLAccName := GLEntry.Description;
                 DimValue.Get('EMPLOYEE', TempDistRule."Shortcut Dimension 1 Code");
                 EmpName := DimValue.Name;
+                GLEntry.CalcFields("Account Category");
+                DistributionRules.SetRange("Entry No.", TempDistRule."Entry No.");
+                DistributionRules.SetRange("Shortcut Dimension 1 Code", TempDistRule."Shortcut Dimension 1 Code");
+                DistributionRules.SetRange("Shortcut Dimension 2 Code", TempDistRule."Shortcut Dimension 2 Code");
+                DistributionRules.SetRange("Shortcut Dimension 3 Code", TempDistRule."Shortcut Dimension 3 Code");
+                DistributionRules.FindFirst();
+                if ((GLEntry."Account Category"::Expense) = GLEntry."Account Category") then begin
+                    DebitAmountAllocated := DistributionRules."Amount Allocated";
+                    DebitAmountAllocated2 += DistributionRules."Amount Allocated";
+                end;
+
+                if ((GLEntry."Account Category"::Income) = GLEntry."Account Category") then begin
+                    CreditAmountAllocated := DistributionRules."Amount Allocated";
+                    CreditAmountAllocated2 += DistributionRules."Amount Allocated";
+                end;
+                TotalAmount += CreditAmountAllocated2 - DebitAmountAllocated2;
+                Commit();
             end;
         }
     }
@@ -134,10 +172,12 @@ report 50201 "Distribution Analysis"
         TempDistRule.Insert();
     end;
 
-    local procedure InitDistRuleTemp()
+    local procedure InitDistributiomRuleTemp()
     begin
         Inx += 1;
         Clear(TempDistRule);
+        Clear(CreditAmountAllocated);
+        Clear(DebitAmountAllocated);
         TempDistRule."Entry No." := DistributionRule."Entry No.";
         TempDistRule."Line No." := Inx;
         TempDistRule."G/L Account No." := DistributionRule."G/L Account No.";
@@ -146,8 +186,8 @@ report 50201 "Distribution Analysis"
         TempDistRule."Shortcut Dimension 1 Code" := DistributionRule."Shortcut Dimension 1 Code";
         TempDistRule."Shortcut Dimension 2 Code" := DistributionRule."Shortcut Dimension 2 Code";
         TempDistRule."Shortcut Dimension 3 Code" := DistributionRule."Shortcut Dimension 3 Code";
-        TempDistRule."Amount Allocated" := DistributionRule."Amount Allocated";
-        TempDistRule.Insert();
+        TempDistRule.Insert(false);
+        Commit();
     end;
 
     var
@@ -155,8 +195,15 @@ report 50201 "Distribution Analysis"
         GLEntry: Record "G/L Entry";
         TempDistRule: Record "Distribution Rule" temporary;
         TempDistributionPrjectLine: Record "Distribution Project Line" temporary;
+        DebitAmountAllocated: Decimal;
+        CreditAmountAllocated: Decimal;
+        DebitAmountAllocated2: Decimal;
+        CreditAmountAllocated2: Decimal;
         TxtFilter: Text;
         EmpName: Text[100];
         GLAccName: Text[100];
         Inx: Integer;
+        TotalDebitAmount: Decimal;
+        TotalCreditAmount: Decimal;
+        TotalAmount: Decimal;
 }

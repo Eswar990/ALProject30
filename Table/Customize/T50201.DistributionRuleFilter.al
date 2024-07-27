@@ -139,6 +139,10 @@ table 50201 "Distribution Rule Filter"
         field(33; "Distribution Amount One"; Decimal)
         {
             Caption = 'Distribution Amount One';
+            trigger OnValidate()
+            begin
+                CheckDistributionAmounts();
+            end;
         }
 
         field(35; "Dimension Value Two"; Code[20])
@@ -205,6 +209,10 @@ table 50201 "Distribution Rule Filter"
         field(36; "Distribution Amount Two"; Decimal)
         {
             Caption = 'Distribution Amount Two';
+            trigger OnValidate()
+            begin
+                CheckDistributionAmounts();
+            end;
         }
 
         field(40; "Dimension Value Three"; Code[20])
@@ -243,6 +251,10 @@ table 50201 "Distribution Rule Filter"
         field(42; "Distribution Amount Three"; Decimal)
         {
             Caption = 'Distribution Amount Three';
+            trigger OnValidate()
+            begin
+                CheckDistributionAmounts();
+            end;
         }
 
         field(45; "Dimension Value Four"; Code[20])
@@ -281,6 +293,10 @@ table 50201 "Distribution Rule Filter"
         field(47; "Distribution Amount Four"; Decimal)
         {
             Caption = 'Distribution Amount Four';
+            trigger OnValidate()
+            begin
+                CheckDistributionAmounts();
+            end;
         }
 
         field(50; "Dimension Value Five"; Code[20])
@@ -319,6 +335,10 @@ table 50201 "Distribution Rule Filter"
         field(52; "Distribution Amount Five"; Decimal)
         {
             Caption = 'Distribution Amount Five';
+            trigger OnValidate()
+            begin
+                CheckDistributionAmounts();
+            end;
         }
 
         field(53; "Distribution Setup"; Boolean)
@@ -334,11 +354,12 @@ table 50201 "Distribution Rule Filter"
         field(55; "Distribution Options"; Option)
         {
             Caption = 'Distribution Options';
-            OptionMembers = "Single Project","Multiple Project";
-            trigger OnValidate()
-            begin
+            OptionMembers = "","Single Project","Multiple Project";
+        }
 
-            end;
+        field(56; "Consoldation Distribution"; Boolean)
+        {
+            Caption = 'Consoldation Distribution';
         }
     }
     keys
@@ -348,6 +369,14 @@ table 50201 "Distribution Rule Filter"
             Clustered = true;
         }
     }
+    local procedure CheckDistributionAmounts()
+    var
+        DimensionAmount: Decimal;
+    begin
+        DimensionAmount := ((Rec."Distribution Amount One") + (Rec."Distribution Amount Two") + (Rec."Distribution Amount Three") + (Rec."Distribution Amount Four") + (Rec."Distribution Amount Five"));
+        if (DimensionAmount > Rec."Distribution Amount") then
+            Error('Please Check The Distribution Amount');
+    end;
 
     var
         UserCustManage: Codeunit "User Customize Manage";

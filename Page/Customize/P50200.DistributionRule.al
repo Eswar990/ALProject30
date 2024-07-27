@@ -4,9 +4,12 @@ page 50200 "Distribution Rule"
     Caption = 'Distribution Rule';
     PageType = ListPart;
     SourceTable = "Distribution Rule";
+    UsageCategory = Tasks;
     SourceTableView = sorting("Entry No.", "Line No.");
+    InsertAllowed = true;
     DelayedInsert = true;
     AutoSplitKey = true;
+    DeleteAllowed = true;
     MultipleNewLines = true;
     LinksAllowed = false;
     layout
@@ -130,6 +133,16 @@ page 50200 "Distribution Rule"
                     CurrPage.Update(true);
                 end;
             }
+            action("Import Distribution Rule Lines")
+            {
+                ApplicationArea = All;
+                Image = UpdateDescription;
+                Visible = IsVisible;
+
+                trigger OnAction()
+                begin
+                end;
+            }
         }
     }
     trigger OnOpenPage()
@@ -138,8 +151,15 @@ page 50200 "Distribution Rule"
     end;
 
     trigger OnAfterGetCurrRecord()
+    var
+        DistributionRuleFilter: Record "Distribution Rule Filter";
     begin
-
+        if (DistributionRuleFilter.Get(Rec."Entry No.") = true) then begin
+            if (DistributionRuleFilter."Consoldation Distribution" = true) then begin
+                IsVisible := true;
+            end else
+                IsVisible := false;
+        end;
     end;
 
     trigger OnDeleteRecord(): Boolean
@@ -247,4 +267,7 @@ page 50200 "Distribution Rule"
         RemAmount: Decimal;
         DistributionRuleAmount: Decimal;
         AmountAlloEdit: Boolean;
+        IsVisible: Boolean;
+
+        v: Page 1314;
 }

@@ -19,39 +19,39 @@
             <TablixBody>
               <TablixColumns>
                 <TablixColumn>
-                  <Width>0.88544in</Width>
+                  <Width>0.94086in</Width>
                 </TablixColumn>
                 <TablixColumn>
-                  <Width>0.88542in</Width>
+                  <Width>0.94084in</Width>
                 </TablixColumn>
                 <TablixColumn>
-                  <Width>1in</Width>
+                  <Width>1.09707in</Width>
                 </TablixColumn>
                 <TablixColumn>
-                  <Width>1.72917in</Width>
+                  <Width>1.52127in</Width>
                 </TablixColumn>
                 <TablixColumn>
-                  <Width>1in</Width>
+                  <Width>1.05542in</Width>
                 </TablixColumn>
                 <TablixColumn>
-                  <Width>1in</Width>
+                  <Width>1.05542in</Width>
                 </TablixColumn>
                 <TablixColumn>
-                  <Width>1.52in</Width>
+                  <Width>1.40917in</Width>
                 </TablixColumn>
                 <TablixColumn>
                   <Width>1.04166in</Width>
                 </TablixColumn>
                 <TablixColumn>
-                  <Width>0.63542in</Width>
+                  <Width>0.92707in</Width>
                 </TablixColumn>
                 <TablixColumn>
-                  <Width>0.875in</Width>
+                  <Width>1.00959in</Width>
                 </TablixColumn>
               </TablixColumns>
               <TablixRows>
                 <TablixRow>
-                  <Height>0.25in</Height>
+                  <Height>0.25347in</Height>
                   <TablixCells>
                     <TablixCell>
                       <CellContents>
@@ -377,7 +377,7 @@
                   </TablixCells>
                 </TablixRow>
                 <TablixRow>
-                  <Height>0.2in</Height>
+                  <Height>0.20347in</Height>
                   <TablixCells>
                     <TablixCell>
                       <CellContents>
@@ -515,7 +515,7 @@
                   </TablixCells>
                 </TablixRow>
                 <TablixRow>
-                  <Height>0.2in</Height>
+                  <Height>0.20347in</Height>
                   <TablixCells>
                     <TablixCell>
                       <CellContents>
@@ -548,7 +548,6 @@
                             <PaddingBottom>2pt</PaddingBottom>
                           </Style>
                         </Textbox>
-                        <rd:Selected>true</rd:Selected>
                       </CellContents>
                     </TablixCell>
                     <TablixCell>
@@ -757,6 +756,9 @@
                             </Paragraph>
                           </Paragraphs>
                           <rd:DefaultName>TempDistRuleDebit</rd:DefaultName>
+                          <Visibility>
+                            <Hidden>=Fields!TempDistRuleDebit.Value = 0</Hidden>
+                          </Visibility>
                           <Style>
                             <Border>
                               <Style>None</Style>
@@ -771,23 +773,27 @@
                     </TablixCell>
                     <TablixCell>
                       <CellContents>
-                        <Textbox Name="Textbox32">
+                        <Textbox Name="TempDistRuleCredit">
                           <CanGrow>true</CanGrow>
                           <KeepTogether>true</KeepTogether>
                           <Paragraphs>
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value />
+                                  <Value>=Fields!TempDistRuleCredit.Value</Value>
                                   <Style>
                                     <FontSize>8pt</FontSize>
+                                    <Format>0.00;(0.00)</Format>
                                   </Style>
                                 </TextRun>
                               </TextRuns>
                               <Style />
                             </Paragraph>
                           </Paragraphs>
-                          <rd:DefaultName>Textbox32</rd:DefaultName>
+                          <rd:DefaultName>TempDistRuleCredit</rd:DefaultName>
+                          <Visibility>
+                            <Hidden>=Fields!TempDistRuleCredit.Value = 0</Hidden>
+                          </Visibility>
                           <Style>
                             <Border>
                               <Style>None</Style>
@@ -834,7 +840,7 @@
                   </TablixCells>
                 </TablixRow>
                 <TablixRow>
-                  <Height>0.2in</Height>
+                  <Height>0.20347in</Height>
                   <TablixCells>
                     <TablixCell>
                       <CellContents>
@@ -899,19 +905,18 @@
                             </Paragraph>
                           </Paragraphs>
                           <rd:DefaultName>TempDistRuleDebit</rd:DefaultName>
+                          <Visibility>
+                            <Hidden>=Fields!TempDistRuleDebit.Value = 0</Hidden>
+                          </Visibility>
                           <Style>
                             <Border>
                               <Style>None</Style>
                             </Border>
                             <TopBorder>
-                              <Color>Black</Color>
                               <Style>Solid</Style>
-                              <Width>1pt</Width>
                             </TopBorder>
                             <BottomBorder>
-                              <Color>Black</Color>
                               <Style>Solid</Style>
-                              <Width>1pt</Width>
                             </BottomBorder>
                             <PaddingLeft>2pt</PaddingLeft>
                             <PaddingRight>2pt</PaddingRight>
@@ -923,27 +928,38 @@
                     </TablixCell>
                     <TablixCell>
                       <CellContents>
-                        <Textbox Name="Textbox57">
+                        <Textbox Name="TempDistRuleCredit1">
                           <CanGrow>true</CanGrow>
                           <KeepTogether>true</KeepTogether>
                           <Paragraphs>
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value />
+                                  <Value>=Sum(Fields!TempDistRuleCredit.Value)</Value>
                                   <Style>
                                     <FontSize>8pt</FontSize>
+                                    <FontWeight>Bold</FontWeight>
+                                    <Format>0.00;(0.00)</Format>
                                   </Style>
                                 </TextRun>
                               </TextRuns>
                               <Style />
                             </Paragraph>
                           </Paragraphs>
-                          <rd:DefaultName>Textbox57</rd:DefaultName>
+                          <rd:DefaultName>TempDistRuleCredit1</rd:DefaultName>
+                          <Visibility>
+                            <Hidden>=Fields!TempDistRuleCredit.Value = 0</Hidden>
+                          </Visibility>
                           <Style>
                             <Border>
                               <Style>None</Style>
                             </Border>
+                            <TopBorder>
+                              <Style>Solid</Style>
+                            </TopBorder>
+                            <BottomBorder>
+                              <Style>Solid</Style>
+                            </BottomBorder>
                             <PaddingLeft>2pt</PaddingLeft>
                             <PaddingRight>2pt</PaddingRight>
                             <PaddingTop>2pt</PaddingTop>
@@ -1034,10 +1050,283 @@
               </TablixMembers>
             </TablixRowHierarchy>
             <DataSetName>DataSet_Result</DataSetName>
-            <Top>0.01389in</Top>
+            <Top>0in</Top>
             <Left>0in</Left>
-            <Height>0.85in</Height>
-            <Width>10.57211in</Width>
+            <Height>0.86388in</Height>
+            <Width>10.99837in</Width>
+            <Style>
+              <Border>
+                <Style>None</Style>
+              </Border>
+            </Style>
+          </Tablix>
+          <Tablix Name="Tablix2">
+            <TablixBody>
+              <TablixColumns>
+                <TablixColumn>
+                  <Width>1.03125in</Width>
+                </TablixColumn>
+                <TablixColumn>
+                  <Width>1.04166in</Width>
+                </TablixColumn>
+                <TablixColumn>
+                  <Width>0.92709in</Width>
+                </TablixColumn>
+              </TablixColumns>
+              <TablixRows>
+                <TablixRow>
+                  <Height>0.21181in</Height>
+                  <TablixCells>
+                    <TablixCell>
+                      <CellContents>
+                        <Textbox Name="Textbox18">
+                          <CanGrow>true</CanGrow>
+                          <KeepTogether>true</KeepTogether>
+                          <Paragraphs>
+                            <Paragraph>
+                              <TextRuns>
+                                <TextRun>
+                                  <Value>Net Total</Value>
+                                  <Style>
+                                    <FontSize>8pt</FontSize>
+                                    <FontWeight>Bold</FontWeight>
+                                  </Style>
+                                </TextRun>
+                              </TextRuns>
+                              <Style>
+                                <TextAlign>Left</TextAlign>
+                              </Style>
+                            </Paragraph>
+                          </Paragraphs>
+                          <rd:DefaultName>Textbox18</rd:DefaultName>
+                          <ZIndex>6</ZIndex>
+                          <Style>
+                            <Border>
+                              <Style>None</Style>
+                            </Border>
+                            <PaddingLeft>2pt</PaddingLeft>
+                            <PaddingRight>2pt</PaddingRight>
+                            <PaddingTop>2pt</PaddingTop>
+                            <PaddingBottom>2pt</PaddingBottom>
+                          </Style>
+                        </Textbox>
+                      </CellContents>
+                    </TablixCell>
+                    <TablixCell>
+                      <CellContents>
+                        <Textbox Name="TotalDebitAmount">
+                          <CanGrow>true</CanGrow>
+                          <KeepTogether>true</KeepTogether>
+                          <Paragraphs>
+                            <Paragraph>
+                              <TextRuns>
+                                <TextRun>
+                                  <Value>=Sum(Fields!TempDistRuleDebit.Value)</Value>
+                                  <Style>
+                                    <FontSize>8pt</FontSize>
+                                    <FontWeight>Bold</FontWeight>
+                                    <Format>0.00;(0.00)</Format>
+                                  </Style>
+                                </TextRun>
+                              </TextRuns>
+                              <Style />
+                            </Paragraph>
+                          </Paragraphs>
+                          <rd:DefaultName>TotalDebitAmount</rd:DefaultName>
+                          <Style>
+                            <Border>
+                              <Style>None</Style>
+                            </Border>
+                            <TopBorder>
+                              <Style>Solid</Style>
+                            </TopBorder>
+                            <BottomBorder>
+                              <Style>Solid</Style>
+                            </BottomBorder>
+                            <PaddingLeft>2pt</PaddingLeft>
+                            <PaddingRight>2pt</PaddingRight>
+                            <PaddingTop>2pt</PaddingTop>
+                            <PaddingBottom>2pt</PaddingBottom>
+                          </Style>
+                        </Textbox>
+                      </CellContents>
+                    </TablixCell>
+                    <TablixCell>
+                      <CellContents>
+                        <Textbox Name="Textbox19">
+                          <CanGrow>true</CanGrow>
+                          <KeepTogether>true</KeepTogether>
+                          <Paragraphs>
+                            <Paragraph>
+                              <TextRuns>
+                                <TextRun>
+                                  <Value>=Sum(Fields!TempDistRuleCredit.Value)</Value>
+                                  <Style>
+                                    <FontSize>8pt</FontSize>
+                                    <FontWeight>Bold</FontWeight>
+                                    <Format>0.00;(0.00)</Format>
+                                  </Style>
+                                </TextRun>
+                              </TextRuns>
+                              <Style />
+                            </Paragraph>
+                          </Paragraphs>
+                          <rd:DefaultName>Textbox19</rd:DefaultName>
+                          <Style>
+                            <Border>
+                              <Style>None</Style>
+                            </Border>
+                            <TopBorder>
+                              <Style>Solid</Style>
+                            </TopBorder>
+                            <BottomBorder>
+                              <Style>Solid</Style>
+                            </BottomBorder>
+                            <PaddingLeft>2pt</PaddingLeft>
+                            <PaddingRight>2pt</PaddingRight>
+                            <PaddingTop>2pt</PaddingTop>
+                            <PaddingBottom>2pt</PaddingBottom>
+                          </Style>
+                        </Textbox>
+                      </CellContents>
+                    </TablixCell>
+                  </TablixCells>
+                </TablixRow>
+              </TablixRows>
+            </TablixBody>
+            <TablixColumnHierarchy>
+              <TablixMembers>
+                <TablixMember />
+                <TablixMember />
+                <TablixMember />
+              </TablixMembers>
+            </TablixColumnHierarchy>
+            <TablixRowHierarchy>
+              <TablixMembers>
+                <TablixMember />
+              </TablixMembers>
+            </TablixRowHierarchy>
+            <DataSetName>DataSet_Result</DataSetName>
+            <Top>0.89166in</Top>
+            <Left>6.98878in</Left>
+            <Height>0.21181in</Height>
+            <Width>3in</Width>
+            <ZIndex>1</ZIndex>
+            <Style>
+              <Border>
+                <Style>None</Style>
+              </Border>
+            </Style>
+          </Tablix>
+          <Tablix Name="Tablix3">
+            <TablixBody>
+              <TablixColumns>
+                <TablixColumn>
+                  <Width>1in</Width>
+                </TablixColumn>
+                <TablixColumn>
+                  <Width>2in</Width>
+                </TablixColumn>
+              </TablixColumns>
+              <TablixRows>
+                <TablixRow>
+                  <Height>0.16361in</Height>
+                  <TablixCells>
+                    <TablixCell>
+                      <CellContents>
+                        <Textbox Name="Textbox23">
+                          <CanGrow>true</CanGrow>
+                          <KeepTogether>true</KeepTogether>
+                          <Paragraphs>
+                            <Paragraph>
+                              <TextRuns>
+                                <TextRun>
+                                  <Value>Difference</Value>
+                                  <Style>
+                                    <FontSize>8pt</FontSize>
+                                    <FontWeight>Bold</FontWeight>
+                                  </Style>
+                                </TextRun>
+                              </TextRuns>
+                              <Style />
+                            </Paragraph>
+                          </Paragraphs>
+                          <rd:DefaultName>Textbox23</rd:DefaultName>
+                          <Style>
+                            <Border>
+                              <Style>None</Style>
+                            </Border>
+                            <PaddingLeft>2pt</PaddingLeft>
+                            <PaddingRight>2pt</PaddingRight>
+                            <PaddingTop>2pt</PaddingTop>
+                            <PaddingBottom>2pt</PaddingBottom>
+                          </Style>
+                        </Textbox>
+                      </CellContents>
+                    </TablixCell>
+                    <TablixCell>
+                      <CellContents>
+                        <Textbox Name="TotalAmount">
+                          <CanGrow>true</CanGrow>
+                          <KeepTogether>true</KeepTogether>
+                          <Paragraphs>
+                            <Paragraph>
+                              <TextRuns>
+                                <TextRun>
+                                  <Value>=Fields!TotalAmount.Value</Value>
+                                  <Style>
+                                    <FontSize>8pt</FontSize>
+                                    <FontWeight>Bold</FontWeight>
+                                    <Format>0.00;(0.00)</Format>
+                                  </Style>
+                                </TextRun>
+                              </TextRuns>
+                              <Style />
+                            </Paragraph>
+                          </Paragraphs>
+                          <rd:DefaultName>TotalAmount</rd:DefaultName>
+                          <Style>
+                            <Border>
+                              <Style>None</Style>
+                            </Border>
+                            <TopBorder>
+                              <Style>Solid</Style>
+                            </TopBorder>
+                            <BottomBorder>
+                              <Style>Solid</Style>
+                            </BottomBorder>
+                            <PaddingLeft>2pt</PaddingLeft>
+                            <PaddingRight>2pt</PaddingRight>
+                            <PaddingTop>2pt</PaddingTop>
+                            <PaddingBottom>2pt</PaddingBottom>
+                          </Style>
+                        </Textbox>
+                      </CellContents>
+                    </TablixCell>
+                  </TablixCells>
+                </TablixRow>
+              </TablixRows>
+            </TablixBody>
+            <TablixColumnHierarchy>
+              <TablixMembers>
+                <TablixMember />
+                <TablixMember />
+              </TablixMembers>
+            </TablixColumnHierarchy>
+            <TablixRowHierarchy>
+              <TablixMembers>
+                <TablixMember />
+              </TablixMembers>
+            </TablixRowHierarchy>
+            <DataSetName>DataSet_Result</DataSetName>
+            <PageBreak>
+              <BreakLocation>End</BreakLocation>
+            </PageBreak>
+            <Top>1.13125in</Top>
+            <Left>6.98878in</Left>
+            <Height>0.16361in</Height>
+            <Width>3in</Width>
+            <ZIndex>2</ZIndex>
             <Style>
               <Border>
                 <Style>None</Style>
@@ -1045,10 +1334,10 @@
             </Style>
           </Tablix>
         </ReportItems>
-        <Height>0.88472in</Height>
+        <Height>1.45846in</Height>
         <Style />
       </Body>
-      <Width>10.57211in</Width>
+      <Width>10.99837in</Width>
       <Page>
         <PageHeader>
           <Height>0.90487in</Height>
@@ -1261,7 +1550,7 @@
               <rd:DefaultName>Textbox1</rd:DefaultName>
               <Top>1.64748cm</Top>
               <Height>0.25in</Height>
-              <Width>0.88544in</Width>
+              <Width>0.94086in</Width>
               <ZIndex>6</ZIndex>
               <Style>
                 <Border>
@@ -1297,9 +1586,9 @@
               </Paragraphs>
               <rd:DefaultName>Textbox3</rd:DefaultName>
               <Top>1.64748cm</Top>
-              <Left>2.24902cm</Left>
+              <Left>2.42506cm</Left>
               <Height>0.25in</Height>
-              <Width>0.88542in</Width>
+              <Width>0.91306in</Width>
               <ZIndex>7</ZIndex>
               <Style>
                 <Border>
@@ -1335,9 +1624,9 @@
               </Paragraphs>
               <rd:DefaultName>Textbox5</rd:DefaultName>
               <Top>1.64748cm</Top>
-              <Left>4.49798cm</Left>
+              <Left>4.85007cm</Left>
               <Height>0.25in</Height>
-              <Width>1in</Width>
+              <Width>1.06929in</Width>
               <ZIndex>8</ZIndex>
               <Style>
                 <Border>
@@ -1373,9 +1662,9 @@
               </Paragraphs>
               <rd:DefaultName>Textbox2</rd:DefaultName>
               <Top>1.64748cm</Top>
-              <Left>7.03798cm</Left>
+              <Left>7.56608cm</Left>
               <Height>0.25in</Height>
-              <Width>1.72917in</Width>
+              <Width>1.52126in</Width>
               <ZIndex>9</ZIndex>
               <Style>
                 <Border>
@@ -1451,7 +1740,7 @@
               <Top>1.64748cm</Top>
               <Left>13.97008cm</Left>
               <Height>0.25in</Height>
-              <Width>1in</Width>
+              <Width>1.11085in</Width>
               <ZIndex>11</ZIndex>
               <Style>
                 <Border>
@@ -1487,9 +1776,9 @@
               </Paragraphs>
               <rd:DefaultName>Textbox15</rd:DefaultName>
               <Top>1.64748cm</Top>
-              <Left>16.51008cm</Left>
+              <Left>16.79164cm</Left>
               <Height>0.25in</Height>
-              <Width>1.52in</Width>
+              <Width>1.40915in</Width>
               <ZIndex>12</ZIndex>
               <Style>
                 <Border>
@@ -1565,7 +1854,7 @@
               <Top>1.64748cm</Top>
               <Left>23.01669cm</Left>
               <Height>0.25in</Height>
-              <Width>0.63542in</Width>
+              <Width>0.92709in</Width>
               <ZIndex>14</ZIndex>
               <Style>
                 <Border>
@@ -1601,9 +1890,9 @@
               </Paragraphs>
               <rd:DefaultName>Textbox33</rd:DefaultName>
               <Top>1.64748cm</Top>
-              <Left>24.63066cm</Left>
+              <Left>25.3715cm</Left>
               <Height>0.25in</Height>
-              <Width>0.875in</Width>
+              <Width>0.9375in</Width>
               <ZIndex>15</ZIndex>
               <Style>
                 <Border>
@@ -1628,7 +1917,7 @@
           </Style>
         </PageHeader>
         <PageFooter>
-          <Height>0.23959in</Height>
+          <Height>0.27084in</Height>
           <PrintOnFirstPage>true</PrintOnFirstPage>
           <PrintOnLastPage>true</PrintOnLastPage>
           <Style>
@@ -1725,8 +2014,32 @@ End Function
         <Field Name="TempDistRuleDebitFormat">
           <DataField>TempDistRuleDebitFormat</DataField>
         </Field>
+        <Field Name="TempDistRuleCredit">
+          <DataField>TempDistRuleCredit</DataField>
+        </Field>
+        <Field Name="TempDistRuleCreditFormat">
+          <DataField>TempDistRuleCreditFormat</DataField>
+        </Field>
         <Field Name="TempDistRuleEntryNo">
           <DataField>TempDistRuleEntryNo</DataField>
+        </Field>
+        <Field Name="TotalAmount">
+          <DataField>TotalAmount</DataField>
+        </Field>
+        <Field Name="TotalAmountFormat">
+          <DataField>TotalAmountFormat</DataField>
+        </Field>
+        <Field Name="DebitAmountAllocated2">
+          <DataField>DebitAmountAllocated2</DataField>
+        </Field>
+        <Field Name="DebitAmountAllocated2Format">
+          <DataField>DebitAmountAllocated2Format</DataField>
+        </Field>
+        <Field Name="CreditAmountAllocated2">
+          <DataField>CreditAmountAllocated2</DataField>
+        </Field>
+        <Field Name="CreditAmountAllocated2Format">
+          <DataField>CreditAmountAllocated2Format</DataField>
         </Field>
       </Fields>
       <Query>

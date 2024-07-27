@@ -97,6 +97,11 @@ page 50201 "Distribution Rule Filter"
                 {
                     ToolTip = 'Specifies the value of the Distribution Options';
                 }
+                field("Consoldation Distribution"; Rec."Consoldation Distribution")
+                {
+                    ToolTip = 'Specifies the value of the Contribution Distribution';
+                    Editable = IsEditableConsoldationField;
+                }
             }
             group("Branch Distribution")
             {
@@ -244,7 +249,6 @@ page 50201 "Distribution Rule Filter"
                 Caption = 'Project Line';
                 SubPageLink = "Entry No." = field("Entry No.");
                 Editable = IsEditableDistributionLinkParts;
-                // Visible = IsVisibleDistributionRule;
             }
 
             part(DistributionProjectLine; "Distribution Project Line")
@@ -308,7 +312,8 @@ page 50201 "Distribution Rule Filter"
 
                     if ((Rec."Dimension Value One" = '') and (Rec."Distribution Amount One" = 0) and (Rec."Dimension Value Two" = '') and (Rec."Distribution Amount Two" = 0) and (Rec."Dimension Value Three" = '') and (Rec."Distribution Amount Three" = 0) and (Rec."Dimension Value Four" = '') and (Rec."Distribution Amount Four" = 0) and (Rec."Dimension Value Five" = '') and (Rec."Distribution Amount Five" = 0)) then begin
                         if (Rec."Distribution Setup" = true) then begin
-                            GetMonthAndYear(GLEntry);
+                            DistributionYear := UserCustomizedmanage.GetDistributionYear(GLEntry."Entry No.");
+                            DistributionMonth := UserCustomizedmanage.GetDistributionMonth(GLEntry."Entry No.");
                             DistributionLines.SetRange(Year, DistributionYear);
                             DistributionLines.SetRange(Month, DistributionMonth);
                             if (DistributionLines.FindSet() = true) then
@@ -489,7 +494,7 @@ page 50201 "Distribution Rule Filter"
                         exit
                     else
                         repeat
-                            Distributionproject.TestField("Project Amount");
+                            // Distributionproject.TestField("Project Amount", 0);
                             AzzDistributionRule.SetRange("Entry No.", Rec."Entry No.");
                             AzzDistributionRule.SetRange("Shortcut Dimension 1 Code", Distributionproject."Shortcut Dimension 3 Code");
                             AzzDistributionRule.SetRange("Shortcut Dimension 2 Code", Distributionproject."Shortcut Dimension 2 Code");
@@ -559,6 +564,7 @@ page 50201 "Distribution Rule Filter"
         GLEntry: Record "G/L Entry";
         xRecDimValue: Code[20];
     begin
+
         if Rec."Dimension Value" = '' then
             FieldDimVEdit := true;
 
@@ -570,12 +576,12 @@ page 50201 "Distribution Rule Filter"
         end;
 
         if Rec."Sales Invoice" then begin
-            Rec."Distribution Amount" := Amount;
+            Rec."Distribution Amount" := GLEntry."Credit Amount";
             Rec."Distribution Method" := Rec."Distribution Method"::Manually;
             FieldEditable := false;
             IsFieldEditableDistributionMethod := false;
             if Rec."Distribution Amount" = 0 then
-                Rec."Distribution Amount" := GLEntry."Credit Amount"
+                Rec."Distribution Amount" := GLEntry."Credit Amount";
         end
         else
             Rec."Distribution Amount" := GLEntry."Debit Amount";
@@ -610,6 +616,12 @@ page 50201 "Distribution Rule Filter"
 
         if (Rec."Dist Single Line Amount" = false) then
             IsVisibleDistributionRule := true;
+
+        if (Rec."Distribution Setup" = true) then begin
+            IsEditableConsoldationField := false;
+        end else
+            IsEditableConsoldationField := true;
+
         Rec.Modify();
         CurrPage.DistributionRule.Page.UpdateAmount(Amount, RemAmount);
     end;
@@ -649,8 +661,14 @@ page 50201 "Distribution Rule Filter"
             end;
         end;
 
-        if (IsBooleanProjectLinesAreNotUpdated = false) then
+        if (GLEntry.Get(Rec."Entry No.") = true) then begin
+            if (GLEntry."Distributio Rule Applied" = true) then
+                UserCustomizedmanage.CopyDistributionRuleValues();
+        end;
+
+        if (IsBooleanProjectLinesAreNotUpdated = false) then begin
             CurrPage.Update(true);
+        end;
     end;
 
     procedure InitPageDetails(var GLEntry: Record "G/L Entry")
@@ -693,21 +711,6 @@ page 50201 "Distribution Rule Filter"
             UserCustomizedmanage.UpdateDistAmountManually(Rec, 5);
     end;
 
-    local procedure GetMonthAndYear(GlEntry: Record "G/L Entry")
-    var
-        DistributionPostingDate: Date;
-        PostingDate: Text;
-        Month: Text;
-        Year: Text;
-    begin
-        DistributionPostingDate := GLEntry."Posting Date";
-        PostingDate := Format(DistributionPostingDate);// 01/10/23
-        Month := CopyStr(PostingDate, 1, 2);
-        Year := CopyStr(PostingDate, 7, 8);
-        DistributionYear := InsStr(Year, '20', 1);
-        DistributionMonth := UserCustomizedmanage.ConvertingMonthAndYear(Month);
-    end;
-
     local procedure VisibilityOfDistributionRuleFilterFileds()
     begin
         if (EmployeeDistributionAction = true) then begin
@@ -716,6 +719,15 @@ page 50201 "Distribution Rule Filter"
             FieldDimVEdit := false;
         end else
             IsEditableDistributionLinkParts := true;
+    end;
+
+    local procedure CheckDistributionAmounts()
+    var
+        myDecimal: Decimal;
+    begin
+        myDecimal := ((Rec."Distribution Amount One") + (Rec."Distribution Amount Two") + (Rec."Distribution Amount Three") + (Rec."Distribution Amount Four") + (Rec."Distribution Amount Five"));
+        if (myDecimal > Rec."Distribution Amount") then
+            Error('Please Check The Distribution Amount');
     end;
 
     var
@@ -735,6 +747,8 @@ page 50201 "Distribution Rule Filter"
         FieldGLVisible: Boolean;
         FieldDimVEdit: Boolean;
         IsVisibleEmployeeDistributionAction: Boolean;
+        IsVisibleConsildationfield: Boolean;
+        IsEditableConsoldationField: Boolean;
         IsEditableDistributionLinkParts: Boolean;
         EmployeeDistributionAction: Boolean;
         IsVisibleDistributionRule: Boolean;

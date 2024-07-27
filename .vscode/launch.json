@@ -6,7 +6,7 @@
             "request": "launch",
             "type": "al",
             "environmentType": "Sandbox",
-            //   "environmentName": "AzziteTest_07042023",
+            // "environmentName": "AzziteTest_07042023",
             "environmentName": "NewAzziteTest_06012024",
             // "environmentName": "NewTestDB_20042023",
             "startupObjectId": 22,
