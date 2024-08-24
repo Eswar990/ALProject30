@@ -8,11 +8,6 @@ tableextension 50200 DimensionValueEx extends "Dimension Value"
             Caption = 'Shortcut Dimension 2 Code';
             TableRelation = "Dimension Value".Code WHERE("Global Dimension No." = CONST(2),
                                                           Blocked = CONST(false));
-
-            trigger OnValidate()
-            begin
-
-            end;
         }
         field(50201; "Shortcut Dimension 3 Code"; Code[20])
         {
@@ -21,7 +16,6 @@ tableextension 50200 DimensionValueEx extends "Dimension Value"
             TableRelation = "Dimension Value".Code WHERE("Global Dimension No." = CONST(3),
                                                           Blocked = CONST(false));
         }
-
         field(50202; "Shortcut Dimension 3 Two"; Code[20])
         {
             CaptionClass = UserCustManage.GetFieldCaption(3, 'Two');

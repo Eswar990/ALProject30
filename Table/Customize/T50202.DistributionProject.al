@@ -70,6 +70,7 @@ table 50202 "Distribution Project"
         {
         }
     }
+
     trigger OnDelete()
     begin
         UserCustManage.CheckDistRuleExist(Rec."Entry No.");

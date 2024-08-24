@@ -102,6 +102,7 @@ table 50207 "Copy Distribution Rule"
 
         }
     }
+
     var
         UserCustManage: Codeunit "User Customize Manage";
 }

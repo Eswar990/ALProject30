@@ -44,5 +44,4 @@ codeunit 50202 "Copy Distribution Consoldation"
             until DistributionRule.Next() = 0;
         end
     end;
-
 }

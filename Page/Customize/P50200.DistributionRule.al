@@ -278,6 +278,4 @@ page 50200 "Distribution Rule"
         DistributionRuleAmount: Decimal;
         AmountAlloEdit: Boolean;
         IsVisible: Boolean;
-
-        v: Page 1314;
 }

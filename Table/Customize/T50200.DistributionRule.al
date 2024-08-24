@@ -113,6 +113,7 @@ table 50200 "Distribution Rule"
 
         }
     }
+
     var
         UserCustManage: Codeunit "User Customize Manage";
 

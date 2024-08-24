@@ -9,12 +9,10 @@ table 50206 "Distribution Project Line"
         {
             Caption = 'Entry No.';
         }
-
         field(2; "Line No."; Integer)
         {
             Caption = 'Line No.';
         }
-
         field(4; "Shortcut Dimension 2 Code"; Code[20])
         {
             CaptionClass = '1,2,2';
@@ -27,7 +25,6 @@ table 50206 "Distribution Project Line"
 
             end;
         }
-
         field(5; "Shortcut Dimension 3 Code"; Code[20])
         {
             CaptionClass = UserCustManage.GetFieldCaption(3, '');
@@ -35,7 +32,6 @@ table 50206 "Distribution Project Line"
             TableRelation = "Dimension Value".Code WHERE("Global Dimension No." = CONST(3),
                                                           Blocked = CONST(false));
         }
-
         field(6; "Shortcut Dimension 1 Code"; Code[20])
         {
             CaptionClass = '1,2,1';
@@ -54,25 +50,21 @@ table 50206 "Distribution Project Line"
                 Rec.Validate("Shortcut Dimension 3 Code", ShortDimCodeThree);
             end;
         }
-
         field(8; "Document No."; Code[20])
         {
             Caption = 'Document No.';
         }
-
         field(10; "G/L Account No."; Code[20])
         {
             Caption = 'G/L Account No.';
             TableRelation = "G/L Account";
             Editable = false;
         }
-
         field(11; "Amount Allocated"; Decimal)
         {
             Caption = 'Amount Allocated';
             DecimalPlaces = 2 : 5;
         }
-
         Field(21; "Total Amount"; Decimal)
         {
             FieldClass = FlowField;

@@ -22,10 +22,6 @@ table 50205 "Distribution Line"
             TableRelation = "Dimension Value".Code WHERE("Global Dimension No." = CONST(1),
                                                           Blocked = CONST(false));
 
-            trigger OnValidate()
-            begin
-
-            end;
         }
         field(5; "Shortcut Dimension 2 Code"; Code[20])
         {
@@ -34,10 +30,6 @@ table 50205 "Distribution Line"
             TableRelation = "Dimension Value".Code WHERE("Global Dimension No." = CONST(2),
                                                           Blocked = CONST(false));
 
-            trigger OnValidate()
-            begin
-
-            end;
         }
         field(6; "Shortcut Dimension 3 Code"; Code[20])
         {
@@ -81,6 +73,7 @@ table 50205 "Distribution Line"
             Clustered = true;
         }
     }
+
     var
         UserCustManage: Codeunit "User Customize Manage";
 }

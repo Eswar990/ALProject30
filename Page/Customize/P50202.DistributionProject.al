@@ -158,5 +158,4 @@ page 50202 "Distribution Project"
         Amount: Decimal;
         RemAmount: Decimal;
         IsVisibleBranchDistributions: Boolean;
-
 }

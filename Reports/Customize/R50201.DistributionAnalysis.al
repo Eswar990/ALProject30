@@ -204,7 +204,6 @@ report 50201 "Distribution Analysis"
         GLEntry: Record "G/L Entry";
         GLAccount: Record "G/L Account";
         TempDistRule: Record "Distribution Rule" temporary;
-        TempDistributionPrjectLine: Record "Distribution Project Line" temporary;
         DebitAmountAllocated: Decimal;
         CreditAmountAllocated: Decimal;
         DebitAmountAllocated2: Decimal;
@@ -213,7 +212,5 @@ report 50201 "Distribution Analysis"
         EmpName: Text[100];
         GLAccName: Text[100];
         Inx: Integer;
-        TotalDebitAmount: Decimal;
-        TotalCreditAmount: Decimal;
         TotalAmount: Decimal;
 }
