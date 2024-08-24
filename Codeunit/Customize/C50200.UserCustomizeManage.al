@@ -313,7 +313,6 @@ codeunit 50200 "User Customize Manage"
             DistributionProject."Shortcut Dimension 2 Code" := DistributionLine."Shortcut Dimension 2 Code";
             DistributionProject."Shortcut Dimension 3 Code" := DistributionLine."Shortcut Dimension 1 Code";
             DistributionProject."Line No." := DistributionProject."Line No." + 1000;
-
             if (Integer = 0) then
                 DistributionProject."Project Amount" := Round(DistributionRuleFilter."Distribution Amount" / EmployeeCount, 0.01);
 
@@ -335,6 +334,12 @@ codeunit 50200 "User Customize Manage"
                 DistributionRule."Emp. Project Percentage" := DistributionLine."Percentage One";
                 DistributionRule."Posting Date" := GLEntry."Posting Date";
                 DistributionRule."Document No." := GLEntry."Document No.";
+                GLEntry.CalcFields("Account Category");
+                if ((GLEntry."Account Category"::Expense) = GLEntry."Account Category") then begin
+                    DistributionRule."Account Category" := GLEntry."Account Category";
+                end else
+                    DistributionRule."Account Category" := GLEntry."Account Category";
+
                 DistributionRule.Modify(false);
             end;
 
@@ -345,9 +350,14 @@ codeunit 50200 "User Customize Manage"
                 DistributionRule."Emp. Project Percentage" := DistributionLine."Percentage Two";
                 DistributionRule."Posting Date" := GLEntry."Posting Date";
                 DistributionRule."Document No." := GLEntry."Document No.";
+                GLEntry.CalcFields("Account Category");
+                if ((GLEntry."Account Category"::Expense) = GLEntry."Account Category") then begin
+                    DistributionRule."Account Category" := GLEntry."Account Category";
+                end else
+                    DistributionRule."Account Category" := GLEntry."Account Category";
+
                 DistributionRule.Modify(false);
             end;
-
 
             if (DistributionLine."Shortcut Dimension 3 Three" = DimensionValueCode) then begin
                 DistRuleIncrementValue += 1;
@@ -356,6 +366,12 @@ codeunit 50200 "User Customize Manage"
                 DistributionRule."Emp. Project Percentage" := DistributionLine."Percentage Three";
                 DistributionRule."Posting Date" := GLEntry."Posting Date";
                 DistributionRule."Document No." := GLEntry."Document No.";
+                GLEntry.CalcFields("Account Category");
+                if ((GLEntry."Account Category"::Expense) = GLEntry."Account Category") then begin
+                    DistributionRule."Account Category" := GLEntry."Account Category";
+                end else
+                    DistributionRule."Account Category" := GLEntry."Account Category";
+
                 DistributionRule.Modify(false);
             end;
             Clear(ProjectIncrementValue);
@@ -391,6 +407,11 @@ codeunit 50200 "User Customize Manage"
                         DistributionRule."Emp. Project Percentage" := DistributionLine."Percentage One";
                         DistributionRule."Posting Date" := GLEntry."Posting Date";
                         DistributionRule."Document No." := GLEntry."Document No.";
+                        GLEntry.CalcFields("Account Category");
+                        if ((GLEntry."Account Category"::Expense) = GLEntry."Account Category") then begin
+                            DistributionRule."Account Category" := GLEntry."Account Category";
+                        end else
+                            DistributionRule."Account Category" := GLEntry."Account Category";
                         DistributionRule.Modify(false);
                     end;
 
@@ -401,6 +422,12 @@ codeunit 50200 "User Customize Manage"
                         DistributionRule."Emp. Project Percentage" := DistributionLine."Percentage Two";
                         DistributionRule."Posting Date" := GLEntry."Posting Date";
                         DistributionRule."Document No." := GLEntry."Document No.";
+                        GLEntry.CalcFields("Account Category");
+                        if ((GLEntry."Account Category"::Expense) = GLEntry."Account Category") then begin
+                            DistributionRule."Account Category" := GLEntry."Account Category";
+                        end else
+                            DistributionRule."Account Category" := GLEntry."Account Category";
+
                         DistributionRule.Modify(false);
                     end;
 
@@ -412,6 +439,12 @@ codeunit 50200 "User Customize Manage"
                         DistributionRule."Emp. Project Percentage" := DistributionLine."Percentage Three";
                         DistributionRule."Posting Date" := GLEntry."Posting Date";
                         DistributionRule."Document No." := GLEntry."Document No.";
+                        GLEntry.CalcFields("Account Category");
+                        if ((GLEntry."Account Category"::Expense) = GLEntry."Account Category") then begin
+                            DistributionRule."Account Category" := GLEntry."Account Category";
+                        end else
+                            DistributionRule."Account Category" := GLEntry."Account Category";
+
                         DistributionRule.Modify(false);
                     end;
                     Clear(ProjectIncrementValue);
@@ -794,33 +827,6 @@ codeunit 50200 "User Customize Manage"
             CombineProjectCodeAndAmountThroughAlocationActionFromExcel(DistRule);
 
         Message('Allocation amount update process completed.');
-    end;
-
-    procedure CopyDistributionRuleValues()
-    var
-        CopyDistributionRule: Record "Copy Distribution Rule";
-        DistributionRule: Record "Distribution Rule";
-    begin
-        CopyDistributionRule.DeleteAll();
-        DistributionRule.Reset();
-        if (DistributionRule.FindSet(false) = true) then
-            repeat
-                CopyDistributionRule.Init();
-                CopyDistributionRule."Entry No." := DistributionRule."Entry No.";
-                if (CopyDistributionRule.FindFirst() = true) then
-                    CopyDistributionRule."Line No." := CopyDistributionRule."Line No." + 1000
-                else
-                    CopyDistributionRule."Line No." := 1000;
-
-                CopyDistributionRule."Shortcut Dimension 1 Code" := DistributionRule."Shortcut Dimension 1 Code";
-                CopyDistributionRule."Shortcut Dimension 2 Code" := DistributionRule."Shortcut Dimension 2 Code";
-                CopyDistributionRule."Shortcut Dimension 3 Code" := DistributionRule."Shortcut Dimension 3 Code";
-                CopyDistributionRule."Document No." := DistributionRule."Document No.";
-                CopyDistributionRule."Amount Allocated" := DistributionRule."Amount Allocated";
-                CopyDistributionRule."Emp. Project Percentage" := DistributionRule."Emp. Project Percentage";
-                CopyDistributionRule."Emp. Project Count" := DistributionRule."Emp. Project Count";
-                CopyDistributionRule.Insert(false);
-            until DistributionRule.Next() = 0;
     end;
 
     procedure UploadDistributionProjectFromExcel(DistributionProject: Record "Distribution Project")
@@ -1384,15 +1390,6 @@ codeunit 50200 "User Customize Manage"
         if not DimValue.FindSet() then
             exit;
         repeat
-            /*
-            DimValue."Shortcut Dimension 2 Code" := '';
-            DimValue."Shortcut Dimension 3 Code" := '';
-            DimValue."Shortcut Dimension 3 Two" := '';
-            DimValue."Shortcut Dimension 3 Three" := '';
-            DimValue."Percentage One" := 0;
-            DimValue."Percentage Two" := 0;
-            DimValue."Percentage Three" := 0;
-            */
             DimValue.Year := Year;
             DimValue.Month := Month;
             DimValue."Distribute Enable" := false;
@@ -1499,28 +1496,29 @@ codeunit 50200 "User Customize Manage"
         DistributionRule."Shortcut Dimension 1 Code" := DistributionLines."Shortcut Dimension 1 Code";
         DistributionRule."Shortcut Dimension 2 Code" := DistributionLines."Shortcut Dimension 2 Code";
         DistributionRule."G/L Account No." := DistributionruleFilter."G/L Account No.";
+        DistributionRule."Company Name" := CompanyName;
         DistributionRule.Insert();
         exit(DistributionRule."Line No.");
     end;
 
-    procedure InsertDistributionProjectLineFromDistributionSetup(var DistributionruleFilter: Record "Distribution Rule Filter"; var DistributionProjectRule: Record "Distribution Project Line"; var DistributionLines: Record "Distribution Line"; DistributionRuleLineNo: Integer): Integer
-    var
-        RuleIncrement: Integer;
-        LastLineNo: Integer;
-    begin
-        DistributionProjectRule.Init();
-        DistributionProjectRule."Entry No." := DistributionruleFilter."Entry No.";
-        if (DistributionProjectRule.FindLast() = true) then
-            DistributionProjectRule."Line No." := DistributionProjectRule."Line No." + 1000
-        else
-            DistributionProjectRule."Line No." := DistributionRuleLineNo + 1000;
+    // procedure InsertDistributionProjectLineFromDistributionSetup(var DistributionruleFilter: Record "Distribution Rule Filter"; var DistributionProjectRule: Record "Distribution Project Line"; var DistributionLines: Record "Distribution Line"; DistributionRuleLineNo: Integer): Integer
+    // var
+    //     RuleIncrement: Integer;
+    //     LastLineNo: Integer;
+    // begin
+    //     DistributionProjectRule.Init();
+    //     DistributionProjectRule."Entry No." := DistributionruleFilter."Entry No.";
+    //     if (DistributionProjectRule.FindLast() = true) then
+    //         DistributionProjectRule."Line No." := DistributionProjectRule."Line No." + 1000
+    //     else
+    //         DistributionProjectRule."Line No." := DistributionRuleLineNo + 1000;
 
-        DistributionProjectRule."Shortcut Dimension 1 Code" := DistributionLines."Shortcut Dimension 1 Code";
-        DistributionProjectRule."Shortcut Dimension 2 Code" := DistributionLines."Shortcut Dimension 2 Code";
-        DistributionProjectRule."G/L Account No." := DistributionruleFilter."G/L Account No.";
-        DistributionProjectRule.Insert(false);
-        exit(DistributionProjectRule."Line No.");
-    end;
+    //     DistributionProjectRule."Shortcut Dimension 1 Code" := DistributionLines."Shortcut Dimension 1 Code";
+    //     DistributionProjectRule."Shortcut Dimension 2 Code" := DistributionLines."Shortcut Dimension 2 Code";
+    //     DistributionProjectRule."G/L Account No." := DistributionruleFilter."G/L Account No.";
+    //     DistributionProjectRule.Insert(false);
+    //     exit(DistributionProjectRule."Line No.");
+    // end;
 
     procedure CombineProjectCodeAndAmount(AzzDistributionRule: Record "Distribution Rule"; Distributionproject: Record "Distribution Project")
     var
@@ -1604,7 +1602,6 @@ codeunit 50200 "User Customize Manage"
         BranchCodeList2: List of [Text];
         ProjectCodeList: List of [Text];
         ProjectCodeList2: List of [Text];
-        // DistributionAmountAllocated: Decimal;
         ProjectIntegerList: Integer;
         IntegerOfList: Integer;
         IntegerOfListTwo: Integer;
@@ -1616,17 +1613,6 @@ codeunit 50200 "User Customize Manage"
         DistributionProjectLine.DeleteAll();
         if (DistributionRulefilter.Get(DistributionProject."Entry No.") = false) then
             exit;
-
-        // if (DistributionRulefilter."Sales Invoice" = false) then
-        //     exit;
-        // DistributionRule.SetRange("Entry No.", DistributionRulefilter."Entry No.");
-        // if (DistributionRule.FindSet(false) = true) then
-        //     repeat
-        //         DistributionAmountAllocated += DistributionRule."Amount Allocated";
-        //     until DistributionProject.Next() = 0;
-
-        // if (DistributionAmountAllocated <> 0) then
-        // DeleteUnnecessaryLinesInDistributionRule(DistributionRule, DistributionProject, DistributionRulefilter);
 
         DistributionRule.Reset();
         DistributionRule.SetRange("Entry No.", DistributionProject."Entry No.");
@@ -1682,30 +1668,8 @@ codeunit 50200 "User Customize Manage"
             Clear(ProjectCodeList2);
             Clear(ProjectCodeList);
         end;
-        // DeleteUnnecessaryLinesInDistributionRule(DistributionRule, DistributionProject, DistributionRulefilter);
     end;
 
-    // local procedure DeleteUnnecessaryLinesInDistributionRule(DistributionRule: Record "Distribution Rule"; DistributionProject: Record "Distribution Project"; DistributionRulefilter: Record "Distribution Rule Filter")
-    // var
-    //     DistributionRuleAmountAllocated: Decimal;
-    // begin
-    //     DistributionRule.Reset();
-    //     DistributionRule.SetRange("Entry No.", DistributionProject."Entry No.");
-    //     if (DistributionRule.FindSet(false) = true) then
-    //         repeat
-    //             DistributionRuleAmountAllocated += DistributionRule."Amount Allocated";
-    //         until DistributionRule.Next() = 0;
-
-    //     if (DistributionRuleAmountAllocated = DistributionRulefilter."Distribution Amount") then begin
-    //         DistributionRule.Reset();
-    //         DistributionRule.SetRange("Entry No.", DistributionProject."Entry No.");
-    //         if (DistributionRule.FindSet(false) = true) then
-    //             repeat
-    //                 if (DistributionRule."Amount Allocated" = 0) then
-    //                     DistributionRule.Delete(false);
-    //             until DistributionRule.Next() = 0;
-    //     end;
-    // end;
 
     procedure DistributionProjectLineAmountUpdatedThroughDistributionProjectAmount(var DistributionProject: Record "Distribution Project")
     var
@@ -1785,8 +1749,69 @@ codeunit 50200 "User Customize Manage"
         end;
     end;
 
+    procedure ReadExcelSheet()
     var
+        FileName: Text[100];
+        SheetName: Text[100];
+        FileMgt: Codeunit "File Management";
+        IStream: InStream;
+        FromFile: Text[100];
+    begin
+        UploadIntoStream(UploadExcelMsg, '', '', FromFile, IStream);
+        if FromFile <> '' then begin
+            FileName := FileMgt.GetFileName(FromFile);
+            SheetName := TempExcelBuffer.SelectSheetsNameStream(IStream);
+        end else
+            Error(NoFileFoundMsg);
+
+        TempExcelBuffer.Reset();
+        TempExcelBuffer.DeleteAll();
+        TempExcelBuffer.OpenBookStream(IStream, SheetName);
+        TempExcelBuffer.ReadSheet();
+    end;
+
+    procedure ImportExcelData()
+    var
+        CopyDistributionRule: Record "Copy Distribution Rule";
+        RowNo: Integer;
+        MaxRowNo: Integer;
+    begin
+        CopyDistributionRule.Reset();
+        TempExcelBuffer.Reset();
+        if TempExcelBuffer.FindLast() then begin
+            MaxRowNo := TempExcelBuffer."Row No.";
+        end;
+
+        for RowNo := 2 to MaxRowNo do begin
+            CopyDistributionRule.Init();
+            Evaluate(CopyDistributionRule."Shortcut Dimension 1 Code", GetValueAtCell(RowNo, 1));
+            Evaluate(CopyDistributionRule."Shortcut Dimension 2 Code", GetValueAtCell(RowNo, 2));
+            Evaluate(CopyDistributionRule."Shortcut Dimension 3 Code", GetValueAtCell(RowNo, 3));
+            Evaluate(CopyDistributionRule."Amount Allocated", GetValueAtCell(RowNo, 4));
+            Evaluate(CopyDistributionRule."G/L Account No.", GetValueAtCell(RowNo, 5));
+            Evaluate(CopyDistributionRule."Entry No.", GetValueAtCell(RowNo, 6));
+            Evaluate(CopyDistributionRule."Line No.", GetValueAtCell(RowNo, 7));
+            Evaluate(CopyDistributionRule."Posting Date", GetValueAtCell(RowNo, 8));
+            CopyDistributionRule.Insert(false);
+        end;
+        Message(ExcelImportSucess);
+    end;
+
+    local procedure GetValueAtCell(RowNo: Integer; ColNo: Integer): Text
+    begin
+        TempExcelBuffer.Reset();
+        if TempExcelBuffer.Get(RowNo, ColNo) then
+            exit(TempExcelBuffer."Cell Value as Text")
+        else
+            exit('');
+    end;
+
+    var
+        TempExcelBuffer: Record "Excel Buffer" temporary;
         DistributionYear: Text;
         DistributionMonth: Text;
         EmployeeCount2: Integer;
+        UploadExcelMsg: Label 'Please Choose the Excel file.';
+        NoFileFoundMsg: Label 'No Excel file found!';
+        ExcelImportSucess: Label 'Excel is successfully imported.';
 }

@@ -13,13 +13,13 @@ page 50205 "Distribution Setup"
             group(General)
             {
                 Caption = 'General';
-
                 group(From)
                 {
                     field("Previous Year"; Rec."Previous Year")
                     {
                         ToolTip = 'Specifies the value of the Previous Year field.';
                     }
+
                     field("Previous Month"; Rec."Previous Month")
                     {
                         ToolTip = 'Specifies the value of the Previous Year field.';
@@ -31,6 +31,7 @@ page 50205 "Distribution Setup"
                     {
                         ToolTip = 'Specifies the value of the Year field.';
                     }
+
                     field(Month; Rec.Month)
                     {
                         ToolTip = 'Specifies the value of the Month field.';
@@ -54,7 +55,6 @@ page 50205 "Distribution Setup"
                 Promoted = true;
                 PromotedCategory = Process;
                 Image = CopyBudget;
-                // Visible = false;
                 trigger OnAction()
                 var
                     UserCustManage: Codeunit "User Customize Manage";
@@ -65,6 +65,7 @@ page 50205 "Distribution Setup"
                     CurrPage.Update(true);
                 end;
             }
+
             action("Copy From Pre. Details")
             {
                 ApplicationArea = All;
@@ -83,6 +84,7 @@ page 50205 "Distribution Setup"
                     CurrPage.Update(true);
                 end;
             }
+
             action("Update Emp. Details")
             {
                 ApplicationArea = All;
@@ -101,6 +103,7 @@ page 50205 "Distribution Setup"
             }
         }
     }
+
     trigger OnQueryClosePage(CloseAction: Action): Boolean
     begin
         Rec.Year := '';
@@ -119,11 +122,5 @@ page 50205 "Distribution Setup"
             Rec.Init();
             Rec.Insert();
         end;
-
     end;
-
-    var
-        xGeneralLedgerSetup: Record "General Ledger Setup";
-        EditableBoolean: Boolean;
-        GenLedSet: Page "General Ledger Setup";
 }

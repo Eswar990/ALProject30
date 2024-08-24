@@ -90,10 +90,21 @@ table 50200 "Distribution Rule"
             Caption = 'Posting Date';
         }
 
+        field(21; "Company Name"; Text[30])
+        {
+            Caption = 'Company Name';
+        }
+
+        field(22; "Account Category"; Enum "G/L Account Category")
+        {
+            Caption = 'Account Category';
+            Editable = false;
+        }
+
     }
     keys
     {
-        key(PK; "Entry No.", "Line No.")
+        key(PK; "Entry No.", "Line No.", "Company Name")
         {
             Clustered = true;
         }

@@ -32,6 +32,7 @@ page 50210 CopyDistributionRule
                     ToolTip = 'Specifies the value of the Emp. Project Count field.';
                     Visible = false;
                 }
+
                 field("Emp. Project Percentage"; Rec."Emp. Project Percentage")
                 {
                     ToolTip = 'Specifies the value of the Emp. Project Percentage field.';
@@ -55,6 +56,11 @@ page 50210 CopyDistributionRule
                     ToolTip = 'Specifies the value of the Line No. field.';
                     Editable = false;
                 }
+                field("Posting Date"; Rec."Posting Date")
+                {
+                    ToolTip = 'Specifies the value of the Posting Date field.';
+                    Editable = false;
+                }
             }
         }
 
@@ -71,9 +77,12 @@ page 50210 CopyDistributionRule
 
                 trigger OnAction()
                 begin
-                    Rec.DeleteAll();
+                    UserCustomizeManage.ReadExcelSheet();
+                    UserCustomizeManage.ImportExcelData();
                 end;
             }
         }
     }
+    var
+        UserCustomizeManage: Codeunit "User Customize Manage";
 }

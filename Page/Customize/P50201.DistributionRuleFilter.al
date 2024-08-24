@@ -241,7 +241,6 @@ page 50201 "Distribution Rule Filter"
             {
                 Caption = 'Employee Line';
                 SubPageLink = "Entry No." = field("Entry No.");
-                // Editable = FieldEditable;
                 Editable = IsEditableDistributionLinkParts;
             }
             part(DistributionRule; "Distribution Rule")
@@ -365,6 +364,12 @@ page 50201 "Distribution Rule Filter"
                                             DistributionRule."Emp. Project Percentage" := DistributionLines."Percentage One";
                                             DistributionRule."Posting Date" := GLEntry."Posting Date";
                                             DistributionRule."Document No." := GLEntry."Document No.";
+                                            GLEntry.CalcFields("Account Category");
+                                            if ((GLEntry."Account Category"::Expense) = GLEntry."Account Category") then begin
+                                                DistributionRule."Account Category" := GLEntry."Account Category";
+                                            end else
+                                                DistributionRule."Account Category" := GLEntry."Account Category";
+
                                             DistributionRule.Modify(false);
                                         end;
 
@@ -375,6 +380,12 @@ page 50201 "Distribution Rule Filter"
                                             DistributionRule."Emp. Project Percentage" := DistributionLines."Percentage Two";
                                             DistributionRule."Posting Date" := GLEntry."Posting Date";
                                             DistributionRule."Document No." := GLEntry."Document No.";
+                                            GLEntry.CalcFields("Account Category");
+                                            if ((GLEntry."Account Category"::Expense) = GLEntry."Account Category") then begin
+                                                DistributionRule."Account Category" := GLEntry."Account Category";
+                                            end else
+                                                DistributionRule."Account Category" := GLEntry."Account Category";
+
                                             DistributionRule.Modify(false);
                                         end;
 
@@ -385,6 +396,12 @@ page 50201 "Distribution Rule Filter"
                                             DistributionRule."Emp. Project Percentage" := DistributionLines."Percentage Three";
                                             DistributionRule."Posting Date" := GLEntry."Posting Date";
                                             DistributionRule."Document No." := GLEntry."Document No.";
+                                            GLEntry.CalcFields("Account Category");
+                                            if ((GLEntry."Account Category"::Expense) = GLEntry."Account Category") then begin
+                                                DistributionRule."Account Category" := GLEntry."Account Category";
+                                            end else
+                                                DistributionRule."Account Category" := GLEntry."Account Category";
+
                                             DistributionRule.Modify(false);
                                         end;
                                         Clear(ProjectIncrementValue);
@@ -661,10 +678,6 @@ page 50201 "Distribution Rule Filter"
             end;
         end;
 
-        if (GLEntry.Get(Rec."Entry No.") = true) then begin
-            if (GLEntry."Distributio Rule Applied" = true) then
-                UserCustomizedmanage.CopyDistributionRuleValues();
-        end;
 
         if (IsBooleanProjectLinesAreNotUpdated = false) then begin
             CurrPage.Update(true);
@@ -721,23 +734,12 @@ page 50201 "Distribution Rule Filter"
             IsEditableDistributionLinkParts := true;
     end;
 
-    local procedure CheckDistributionAmounts()
-    var
-        myDecimal: Decimal;
-    begin
-        myDecimal := ((Rec."Distribution Amount One") + (Rec."Distribution Amount Two") + (Rec."Distribution Amount Three") + (Rec."Distribution Amount Four") + (Rec."Distribution Amount Five"));
-        if (myDecimal > Rec."Distribution Amount") then
-            Error('Please Check The Distribution Amount');
-    end;
-
     var
         UserCustomizedmanage: Codeunit "User Customize Manage";
         DistributionYear: Text;
         DistributionMonth: Text;
-        DistributionRuleCount: Integer;
         GLAccName: Text[100];
         Description: Text[100];
-        GLEntryNo: Code[20];
         DocNo: Code[20];
         GLAccNo: Code[20];
         Amount: Decimal;

@@ -84,6 +84,23 @@ page 50200 "Distribution Rule"
                     ToolTip = 'Specifies the value of the Line No. field.';
                     Editable = false;
                 }
+
+                field("Company Name"; Rec."Company Name")
+                {
+                    ToolTip = 'Specifies The Value of the Company Name field';
+                }
+                field("Account Category"; Rec."Account Category")
+                {
+                    ToolTip = 'Specifies The Value of the Account Category field';
+                }
+                field("Posting Date"; Rec."Posting Date")
+                {
+                    ToolTip = 'Specifies The Value of the Posting Datefield';
+                }
+                field("Document No."; Rec."Document No.")
+                {
+                    ToolTip = 'Specifies The Value of the Document No field';
+                }
             }
             group("Allocation Details")
             {
@@ -173,13 +190,6 @@ page 50200 "Distribution Rule"
         Amount := PassAmt;
         RemAmount := PassRemAmt;
         CurrPage.Update(true);
-    end;
-
-
-    local procedure InitPageDetails(var GLEntry: Record "G/L Entry")
-    begin
-        Amount := GLEntry.Amount;
-        CalRemAmount(GLEntry);
     end;
 
     local procedure CalRemAmount(GLEntry: Record "G/L Entry")
