@@ -1501,25 +1501,6 @@ codeunit 50200 "User Customize Manage"
         exit(DistributionRule."Line No.");
     end;
 
-    // procedure InsertDistributionProjectLineFromDistributionSetup(var DistributionruleFilter: Record "Distribution Rule Filter"; var DistributionProjectRule: Record "Distribution Project Line"; var DistributionLines: Record "Distribution Line"; DistributionRuleLineNo: Integer): Integer
-    // var
-    //     RuleIncrement: Integer;
-    //     LastLineNo: Integer;
-    // begin
-    //     DistributionProjectRule.Init();
-    //     DistributionProjectRule."Entry No." := DistributionruleFilter."Entry No.";
-    //     if (DistributionProjectRule.FindLast() = true) then
-    //         DistributionProjectRule."Line No." := DistributionProjectRule."Line No." + 1000
-    //     else
-    //         DistributionProjectRule."Line No." := DistributionRuleLineNo + 1000;
-
-    //     DistributionProjectRule."Shortcut Dimension 1 Code" := DistributionLines."Shortcut Dimension 1 Code";
-    //     DistributionProjectRule."Shortcut Dimension 2 Code" := DistributionLines."Shortcut Dimension 2 Code";
-    //     DistributionProjectRule."G/L Account No." := DistributionruleFilter."G/L Account No.";
-    //     DistributionProjectRule.Insert(false);
-    //     exit(DistributionProjectRule."Line No.");
-    // end;
-
     procedure CombineProjectCodeAndAmount(AzzDistributionRule: Record "Distribution Rule"; Distributionproject: Record "Distribution Project")
     var
         DistributionProjectLine: Record "Distribution Project Line";
@@ -1749,69 +1730,8 @@ codeunit 50200 "User Customize Manage"
         end;
     end;
 
-    procedure ReadExcelSheet()
     var
-        FileName: Text[100];
-        SheetName: Text[100];
-        FileMgt: Codeunit "File Management";
-        IStream: InStream;
-        FromFile: Text[100];
-    begin
-        UploadIntoStream(UploadExcelMsg, '', '', FromFile, IStream);
-        if FromFile <> '' then begin
-            FileName := FileMgt.GetFileName(FromFile);
-            SheetName := TempExcelBuffer.SelectSheetsNameStream(IStream);
-        end else
-            Error(NoFileFoundMsg);
-
-        TempExcelBuffer.Reset();
-        TempExcelBuffer.DeleteAll();
-        TempExcelBuffer.OpenBookStream(IStream, SheetName);
-        TempExcelBuffer.ReadSheet();
-    end;
-
-    procedure ImportExcelData()
-    var
-        CopyDistributionRule: Record "Copy Distribution Rule";
-        RowNo: Integer;
-        MaxRowNo: Integer;
-    begin
-        CopyDistributionRule.Reset();
-        TempExcelBuffer.Reset();
-        if TempExcelBuffer.FindLast() then begin
-            MaxRowNo := TempExcelBuffer."Row No.";
-        end;
-
-        for RowNo := 2 to MaxRowNo do begin
-            CopyDistributionRule.Init();
-            Evaluate(CopyDistributionRule."Shortcut Dimension 1 Code", GetValueAtCell(RowNo, 1));
-            Evaluate(CopyDistributionRule."Shortcut Dimension 2 Code", GetValueAtCell(RowNo, 2));
-            Evaluate(CopyDistributionRule."Shortcut Dimension 3 Code", GetValueAtCell(RowNo, 3));
-            Evaluate(CopyDistributionRule."Amount Allocated", GetValueAtCell(RowNo, 4));
-            Evaluate(CopyDistributionRule."G/L Account No.", GetValueAtCell(RowNo, 5));
-            Evaluate(CopyDistributionRule."Entry No.", GetValueAtCell(RowNo, 6));
-            Evaluate(CopyDistributionRule."Line No.", GetValueAtCell(RowNo, 7));
-            Evaluate(CopyDistributionRule."Posting Date", GetValueAtCell(RowNo, 8));
-            CopyDistributionRule.Insert(false);
-        end;
-        Message(ExcelImportSucess);
-    end;
-
-    local procedure GetValueAtCell(RowNo: Integer; ColNo: Integer): Text
-    begin
-        TempExcelBuffer.Reset();
-        if TempExcelBuffer.Get(RowNo, ColNo) then
-            exit(TempExcelBuffer."Cell Value as Text")
-        else
-            exit('');
-    end;
-
-    var
-        TempExcelBuffer: Record "Excel Buffer" temporary;
         DistributionYear: Text;
         DistributionMonth: Text;
         EmployeeCount2: Integer;
-        UploadExcelMsg: Label 'Please Choose the Excel file.';
-        NoFileFoundMsg: Label 'No Excel file found!';
-        ExcelImportSucess: Label 'Excel is successfully imported.';
 }

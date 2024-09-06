@@ -23,7 +23,5 @@ codeunit 50201 "Text File Manage"
         ToRecipients.Add('');
         EmailMessage.Create(ToRecipients, '', '', false);
         Email.Send(EmailMessage, Enum::"Email Scenario"::Default);
-
     end;
-
 }

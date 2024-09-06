@@ -356,11 +356,6 @@ table 50201 "Distribution Rule Filter"
             Caption = 'Distribution Options';
             OptionMembers = "","Single Project","Multiple Project";
         }
-
-        field(56; "Consoldation Distribution"; Boolean)
-        {
-            Caption = 'Consoldation Distribution';
-        }
     }
     keys
     {

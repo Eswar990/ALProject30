@@ -97,11 +97,6 @@ page 50201 "Distribution Rule Filter"
                 {
                     ToolTip = 'Specifies the value of the Distribution Options';
                 }
-                field("Consoldation Distribution"; Rec."Consoldation Distribution")
-                {
-                    ToolTip = 'Specifies the value of the Contribution Distribution';
-                    Editable = IsEditableConsoldationField;
-                }
             }
             group("Branch Distribution")
             {
@@ -634,11 +629,6 @@ page 50201 "Distribution Rule Filter"
         if (Rec."Dist Single Line Amount" = false) then
             IsVisibleDistributionRule := true;
 
-        if (Rec."Distribution Setup" = true) then begin
-            IsEditableConsoldationField := false;
-        end else
-            IsEditableConsoldationField := true;
-
         Rec.Modify();
         CurrPage.DistributionRule.Page.UpdateAmount(Amount, RemAmount);
     end;
@@ -750,7 +740,6 @@ page 50201 "Distribution Rule Filter"
         FieldDimVEdit: Boolean;
         IsVisibleEmployeeDistributionAction: Boolean;
         IsVisibleConsildationfield: Boolean;
-        IsEditableConsoldationField: Boolean;
         IsEditableDistributionLinkParts: Boolean;
         EmployeeDistributionAction: Boolean;
         IsVisibleDistributionRule: Boolean;

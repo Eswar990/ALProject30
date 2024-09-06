@@ -167,18 +167,6 @@ page 50200 "Distribution Rule"
         AmountAlloEdit := false;
     end;
 
-    trigger OnAfterGetCurrRecord()
-    var
-        DistributionRuleFilter: Record "Distribution Rule Filter";
-    begin
-        if (DistributionRuleFilter.Get(Rec."Entry No.") = true) then begin
-            if (DistributionRuleFilter."Consoldation Distribution" = true) then begin
-                IsVisible := true;
-            end else
-                IsVisible := false;
-        end;
-    end;
-
     trigger OnDeleteRecord(): Boolean
     begin
         RemAmount := RemAmount + Rec."Amount Allocated";

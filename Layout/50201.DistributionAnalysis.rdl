@@ -11,94 +11,6 @@
       <rd:DataSourceID>8dad3c13-f701-4fac-a1a8-45119b5e702e</rd:DataSourceID>
     </DataSource>
   </DataSources>
-  <DataSets>
-    <DataSet Name="DataSet_Result">
-      <Query>
-        <DataSourceName>DataSource</DataSourceName>
-        <CommandText />
-      </Query>
-      <Fields>
-        <Field Name="TxtFilter">
-          <DataField>TxtFilter</DataField>
-        </Field>
-        <Field Name="CompInfoName">
-          <DataField>CompInfoName</DataField>
-        </Field>
-        <Field Name="TempDistRuleGLAccNo">
-          <DataField>TempDistRuleGLAccNo</DataField>
-        </Field>
-        <Field Name="GLAccName">
-          <DataField>GLAccName</DataField>
-        </Field>
-        <Field Name="Posting_Date">
-          <DataField>Posting_Date</DataField>
-        </Field>
-        <Field Name="TempDistRuleDoc">
-          <DataField>TempDistRuleDoc</DataField>
-        </Field>
-        <Field Name="TempDistRuleEmpNo">
-          <DataField>TempDistRuleEmpNo</DataField>
-        </Field>
-        <Field Name="EmpName">
-          <DataField>EmpName</DataField>
-        </Field>
-        <Field Name="TempDistRuleEmpBranch">
-          <DataField>TempDistRuleEmpBranch</DataField>
-        </Field>
-        <Field Name="TempDistRuleEmpProject">
-          <DataField>TempDistRuleEmpProject</DataField>
-        </Field>
-        <Field Name="TempDistRuleDebit">
-          <DataField>TempDistRuleDebit</DataField>
-        </Field>
-        <Field Name="TempDistRuleDebitFormat">
-          <DataField>TempDistRuleDebitFormat</DataField>
-        </Field>
-        <Field Name="TempDistRuleCredit">
-          <DataField>TempDistRuleCredit</DataField>
-        </Field>
-        <Field Name="TempDistRuleCreditFormat">
-          <DataField>TempDistRuleCreditFormat</DataField>
-        </Field>
-        <Field Name="TempDistRuleEntryNo">
-          <DataField>TempDistRuleEntryNo</DataField>
-        </Field>
-        <Field Name="TotalAmount">
-          <DataField>TotalAmount</DataField>
-        </Field>
-        <Field Name="TotalAmountFormat">
-          <DataField>TotalAmountFormat</DataField>
-        </Field>
-        <Field Name="DebitAmountAllocated2">
-          <DataField>DebitAmountAllocated2</DataField>
-        </Field>
-        <Field Name="DebitAmountAllocated2Format">
-          <DataField>DebitAmountAllocated2Format</DataField>
-        </Field>
-        <Field Name="CreditAmountAllocated2">
-          <DataField>CreditAmountAllocated2</DataField>
-        </Field>
-        <Field Name="CreditAmountAllocated2Format">
-          <DataField>CreditAmountAllocated2Format</DataField>
-        </Field>
-        <Field Name="CompanyName">
-          <DataField>CompanyName</DataField>
-        </Field>
-        <Field Name="TotalDebitAmountAllocated">
-          <DataField>TotalDebitAmountAllocated</DataField>
-        </Field>
-        <Field Name="TotalDebitAmountAllocatedFormat">
-          <DataField>TotalDebitAmountAllocatedFormat</DataField>
-        </Field>
-        <Field Name="TotalCreditAmountAllocated">
-          <DataField>TotalCreditAmountAllocated</DataField>
-        </Field>
-        <Field Name="TotalCreditAmountAllocatedFormat">
-          <DataField>TotalCreditAmountAllocatedFormat</DataField>
-        </Field>
-      </Fields>
-    </DataSet>
-  </DataSets>
   <ReportSections>
     <ReportSection>
       <Body>
@@ -1034,7 +946,6 @@
                             <PaddingBottom>2pt</PaddingBottom>
                           </Style>
                         </Textbox>
-                        <rd:Selected>true</rd:Selected>
                       </CellContents>
                     </TablixCell>
                     <TablixCell>
@@ -1497,7 +1408,7 @@
               <rd:DefaultName>Textbox8</rd:DefaultName>
               <Top>0.47083in</Top>
               <Height>0.13889in</Height>
-              <Width>6.12505in</Width>
+              <Width>10.57211in</Width>
               <ZIndex>2</ZIndex>
               <Style>
                 <Border>
@@ -2051,12 +1962,6 @@
       </Page>
     </ReportSection>
   </ReportSections>
-  <ReportParametersLayout>
-    <GridLayoutDefinition>
-      <NumberOfColumns>4</NumberOfColumns>
-      <NumberOfRows>2</NumberOfRows>
-    </GridLayoutDefinition>
-  </ReportParametersLayout>
   <Code>Public Function BlankZero(ByVal Value As Decimal)
     if Value = 0 then
         Return ""
@@ -2096,4 +2001,80 @@ End Function
   <ConsumeContainerWhitespace>true</ConsumeContainerWhitespace>
   <rd:ReportUnitType>Inch</rd:ReportUnitType>
   <rd:ReportID>0eeb6585-38ae-40f1-885b-8d50088d51b4</rd:ReportID>
+  <DataSets>
+    <DataSet Name="DataSet_Result">
+      <Fields>
+        <Field Name="TxtFilter">
+          <DataField>TxtFilter</DataField>
+        </Field>
+        <Field Name="CompInfoName">
+          <DataField>CompInfoName</DataField>
+        </Field>
+        <Field Name="TempDistRuleGLAccNo">
+          <DataField>TempDistRuleGLAccNo</DataField>
+        </Field>
+        <Field Name="GLAccName">
+          <DataField>GLAccName</DataField>
+        </Field>
+        <Field Name="Posting_Date">
+          <DataField>Posting_Date</DataField>
+        </Field>
+        <Field Name="TempDistRuleDoc">
+          <DataField>TempDistRuleDoc</DataField>
+        </Field>
+        <Field Name="TempDistRuleEmpNo">
+          <DataField>TempDistRuleEmpNo</DataField>
+        </Field>
+        <Field Name="EmpName">
+          <DataField>EmpName</DataField>
+        </Field>
+        <Field Name="TempDistRuleEmpBranch">
+          <DataField>TempDistRuleEmpBranch</DataField>
+        </Field>
+        <Field Name="TempDistRuleEmpProject">
+          <DataField>TempDistRuleEmpProject</DataField>
+        </Field>
+        <Field Name="TempDistRuleDebit">
+          <DataField>TempDistRuleDebit</DataField>
+        </Field>
+        <Field Name="TempDistRuleDebitFormat">
+          <DataField>TempDistRuleDebitFormat</DataField>
+        </Field>
+        <Field Name="TempDistRuleCredit">
+          <DataField>TempDistRuleCredit</DataField>
+        </Field>
+        <Field Name="TempDistRuleCreditFormat">
+          <DataField>TempDistRuleCreditFormat</DataField>
+        </Field>
+        <Field Name="TempDistRuleEntryNo">
+          <DataField>TempDistRuleEntryNo</DataField>
+        </Field>
+        <Field Name="TotalAmount">
+          <DataField>TotalAmount</DataField>
+        </Field>
+        <Field Name="TotalAmountFormat">
+          <DataField>TotalAmountFormat</DataField>
+        </Field>
+        <Field Name="DebitAmountAllocated2">
+          <DataField>DebitAmountAllocated2</DataField>
+        </Field>
+        <Field Name="DebitAmountAllocated2Format">
+          <DataField>DebitAmountAllocated2Format</DataField>
+        </Field>
+        <Field Name="CreditAmountAllocated2">
+          <DataField>CreditAmountAllocated2</DataField>
+        </Field>
+        <Field Name="CreditAmountAllocated2Format">
+          <DataField>CreditAmountAllocated2Format</DataField>
+        </Field>
+        <Field Name="CompanyName">
+          <DataField>CompanyName</DataField>
+        </Field>
+      </Fields>
+      <Query>
+        <DataSourceName>DataSource</DataSourceName>
+        <CommandText />
+      </Query>
+    </DataSet>
+  </DataSets>
 </Report>

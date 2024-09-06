@@ -17,6 +17,7 @@ permissionset 50200 AzzitePermission
         report "Sales Invoice Report" = X,
         codeunit "Text File Manage" = X,
         codeunit "User Customize Manage" = X,
+        codeunit "Copy Distribution Consoldation" = X,
         page "Distribution Entries" = X,
         page "Distribution Project" = X,
         page "Distribution Rule" = X,

@@ -211,8 +211,6 @@ page 50208 "Distribution Entries"
                 var
                     GLEntry: Record "G/L Entry";
                 begin
-                    CopyDistributionRule.DeleteAll();
-
                     GLEntry.Reset();
                     GLEntry.CalcFields("Account Category");
                     GLEntry.SetFilter("Account Category", '%1|%2', GLEntry."Account Category"::Income, GLEntry."Account Category"::Expense);
@@ -235,6 +233,5 @@ page 50208 "Distribution Entries"
     end;
 
     var
-        CopyDistributionRule: Record "Copy Distribution Rule";
         UserCustomizeManage: Codeunit "User Customize Manage";
 }
