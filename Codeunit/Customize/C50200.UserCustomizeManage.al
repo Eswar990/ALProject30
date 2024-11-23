@@ -1418,8 +1418,10 @@ codeunit 50200 "User Customize Manage"
     var
         DistributionLine: Record "Distribution Line";
         TempExcelBuffer: Record "Excel Buffer" temporary;
+        DimensionValue: Record "Dimension Value";
         FileManage: Codeunit "File Management";
         InStm: InStream;
+        ShortcutDimension1Code: Code[20];
         FromFile: Text[250];
         FileName: Text[250];
         UploadExcelMsg: Text[100];
@@ -1462,7 +1464,14 @@ codeunit 50200 "User Customize Manage"
             DistributionLine.Init();
             DistributionLine.Year := Year;
             DistributionLine.Month := Month;
-            DistributionLine."Shortcut Dimension 1 Code" := GetValueAtCell(TempExcelBuffer, RowCount, 3);
+            ShortcutDimension1Code := GetValueAtCell(TempExcelBuffer, RowCount, 3);
+            DimensionValue.SetRange("Dimension Code", 'EMPLOYEE');
+            DimensionValue.SetRange(Code, ShortcutDimension1Code);
+            if (DimensionValue.FindFirst() = false) then begin
+                Error('This Employee Code is not avaliable in Dimensions %1', ShortcutDimension1Code);
+            end;
+
+            DistributionLine."Shortcut Dimension 1 Code" := ShortcutDimension1Code;
             DistributionLine."Shortcut Dimension 2 Code" := GetValueAtCell(TempExcelBuffer, RowCount, 4);
             DistributionLine."Shortcut Dimension 3 Code" := GetValueAtCell(TempExcelBuffer, RowCount, 5);
             Clear(SheetVal);

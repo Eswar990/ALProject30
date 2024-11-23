@@ -33,16 +33,6 @@ page 50200 "Distribution Rule"
                     ToolTip = 'Specifies the value of the Shortcut Dimension 3 Code field.';
                     Editable = false;
                 }
-                field("Emp. Project Count"; Rec."Emp. Project Count")
-                {
-                    ToolTip = 'Specifies the value of the Emp. Project Count field.';
-                    Visible = false;
-                }
-                field("Emp. Project Percentage"; Rec."Emp. Project Percentage")
-                {
-                    ToolTip = 'Specifies the value of the Emp. Project Percentage field.';
-                    Visible = false;
-                }
                 field("Amount Allocated"; Rec."Amount Allocated")
                 {
                     ToolTip = 'Specifies the value of the Amount Allocated field.';
@@ -70,14 +60,19 @@ page 50200 "Distribution Rule"
                         CurrPage.Update(true);
                     end;
                 }
-                field("G/L Account No."; Rec."G/L Account No.")
-                {
-                    ToolTip = 'Specifies the value of the G/L Account No. field.';
-                }
                 field("Entry No."; Rec."Entry No.")
                 {
                     ToolTip = 'Specifies the value of the Entry No. field.';
                     Editable = false;
+                }
+                field("Emp. Project Percentage"; Rec."Emp. Project Percentage")
+                {
+                    ToolTip = 'Specifies the value of the Emp. Project Percentage field.';
+                    Visible = false;
+                }
+                field("G/L Account No."; Rec."G/L Account No.")
+                {
+                    ToolTip = 'Specifies the value of the G/L Account No. field.';
                 }
                 field("Line No."; Rec."Line No.")
                 {
@@ -101,6 +96,12 @@ page 50200 "Distribution Rule"
                 {
                     ToolTip = 'Specifies The Value of the Document No field';
                 }
+                field("Emp. Project Count"; Rec."Emp. Project Count")
+                {
+                    ToolTip = 'Specifies the value of the Emp. Project Count field.';
+                    Visible = false;
+                }
+
             }
             group("Allocation Details")
             {
@@ -256,6 +257,7 @@ page 50200 "Distribution Rule"
             RemAmount := RemAmount - Rec."Amount Allocated"
         else
             RemAmount := RemAmount + xRec."Amount Allocated";
+
         CurrPage.Update(true);
     end;
 

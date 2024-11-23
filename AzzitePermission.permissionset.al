@@ -13,6 +13,7 @@ permissionset 50200 AzzitePermission
         table "Distribution Rule" = X,
         table "Distribution Rule Filter" = X,
         table "Reference Data" = X,
+        table "Distribution Project Line" = X,
         report "Distribution Analysis" = X,
         report "Sales Invoice Report" = X,
         codeunit "Text File Manage" = X,
