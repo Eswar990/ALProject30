@@ -640,18 +640,29 @@ codeunit 50200 "User Customize Manage"
     procedure GetDistributionMonth(GlEntryNo: Integer): Text
     var
         GlEntry: Record "G/L Entry";
+        UserPersonalization: Record "User Personalization";
+        ID: Text;
         DistributionPostingDate: Date;
         PostingDate: Text;
         Month: Text;
         Year: Text;
     begin
+        ID := UserSecurityId();
         if (GlEntry.Get(GlEntryNo) = true) then begin
             DistributionPostingDate := GLEntry."Posting Date";
-            PostingDate := Format(DistributionPostingDate); // 01/10/23
-            Month := CopyStr(PostingDate, 1, 2);
-            DistributionMonth := ConvertingMonthAndYear(Month);
+            if (UserPersonalization.Get(ID) = true) then
+                if (UserPersonalization."Locale ID" = 1033) then begin
+                    PostingDate := Format(DistributionPostingDate); // 11/27/2024(M/D/Y)
+                    Month := CopyStr(PostingDate, 1, 2);
+                    DistributionMonth := ConvertingMonthAndYear(Month);
+                end else begin
+                    if (UserPersonalization."Locale ID" = 2057) then begin
+                        PostingDate := Format(DistributionPostingDate); // 27/11/2024(D/M/Y)
+                        Month := CopyStr(PostingDate, 4, 2);
+                        DistributionMonth := ConvertingMonthAndYear(Month);
+                    end;
+                end;
         end;
-
         exit(DistributionMonth);
     end;
 
