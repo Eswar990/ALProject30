@@ -205,5 +205,4 @@ report 50200 "Sales Invoice Report"
         if Cust."VAT Registration No." <> '' then
             CustAddDetails[7] := Cust."VAT Registration No.";
     end;
-
 }

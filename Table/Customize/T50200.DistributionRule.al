@@ -71,7 +71,9 @@ table 50200 "Distribution Rule"
                 DisRuleFilter: Record "Distribution Rule Filter";
             begin
                 DisRuleFilter.Get(Rec."Entry No.");
-                DisRuleFilter.TestField("Distrubution Method", DisRuleFilter."Distrubution Method"::Manually);
+                DisRuleFilter.TestField("Distribution Method", DisRuleFilter."Distribution Method"::Manually);
+                if (DisRuleFilter."Dist Single Line Amount" = true) then
+                    exit;
                 Rec.TestField("Shortcut Dimension 1 Code");
             end;
         }
@@ -88,10 +90,21 @@ table 50200 "Distribution Rule"
             Caption = 'Posting Date';
         }
 
+        field(21; "Company Name"; Text[30])
+        {
+            Caption = 'Company Name';
+        }
+
+        field(22; "Account Category"; Enum "G/L Account Category")
+        {
+            Caption = 'Account Category';
+            Editable = false;
+        }
+
     }
     keys
     {
-        key(PK; "Entry No.", "Line No.")
+        key(PK; "Entry No.", "Line No.", "Company Name")
         {
             Clustered = true;
         }
@@ -100,6 +113,7 @@ table 50200 "Distribution Rule"
 
         }
     }
+
     var
         UserCustManage: Codeunit "User Customize Manage";
 

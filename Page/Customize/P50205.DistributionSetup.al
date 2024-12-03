@@ -4,6 +4,7 @@ page 50205 "Distribution Setup"
     Caption = 'Distribution Setup';
     PageType = Card;
     SourceTable = "Distribution Header";
+    InsertAllowed = false;
     UsageCategory = Tasks;
     layout
     {
@@ -12,13 +13,13 @@ page 50205 "Distribution Setup"
             group(General)
             {
                 Caption = 'General';
-
                 group(From)
                 {
                     field("Previous Year"; Rec."Previous Year")
                     {
                         ToolTip = 'Specifies the value of the Previous Year field.';
                     }
+
                     field("Previous Month"; Rec."Previous Month")
                     {
                         ToolTip = 'Specifies the value of the Previous Year field.';
@@ -30,6 +31,7 @@ page 50205 "Distribution Setup"
                     {
                         ToolTip = 'Specifies the value of the Year field.';
                     }
+
                     field(Month; Rec.Month)
                     {
                         ToolTip = 'Specifies the value of the Month field.';
@@ -53,7 +55,6 @@ page 50205 "Distribution Setup"
                 Promoted = true;
                 PromotedCategory = Process;
                 Image = CopyBudget;
-                Visible = false;
                 trigger OnAction()
                 var
                     UserCustManage: Codeunit "User Customize Manage";
@@ -64,6 +65,7 @@ page 50205 "Distribution Setup"
                     CurrPage.Update(true);
                 end;
             }
+
             action("Copy From Pre. Details")
             {
                 ApplicationArea = All;
@@ -82,6 +84,7 @@ page 50205 "Distribution Setup"
                     CurrPage.Update(true);
                 end;
             }
+
             action("Update Emp. Details")
             {
                 ApplicationArea = All;
@@ -100,6 +103,7 @@ page 50205 "Distribution Setup"
             }
         }
     }
+
     trigger OnQueryClosePage(CloseAction: Action): Boolean
     begin
         Rec.Year := '';
@@ -107,5 +111,16 @@ page 50205 "Distribution Setup"
         Rec."Previous Year" := '';
         Rec."Previous Month" := '';
         Rec.Modify();
+    end;
+
+    trigger OnOpenPage()
+    var
+        myInt: Integer;
+    begin
+        Rec.Reset();
+        if not Rec.Get() then begin
+            Rec.Init();
+            Rec.Insert();
+        end;
     end;
 }

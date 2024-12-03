@@ -11,10 +11,7 @@ table 50202 "Distribution Project"
         }
         field(5; "Shortcut Dimension 3 Code"; Code[20])
         {
-            CaptionClass = UserCustManage.GetFieldCaption(3, '');
-            Caption = 'Shortcut Dimension 3 Code';
-            TableRelation = "Dimension Value".Code WHERE("Global Dimension No." = CONST(3),
-                                                          Blocked = CONST(false));
+            Caption = 'Employee Code';
         }
         field(11; "Project Amount"; Decimal)
         {
@@ -73,14 +70,12 @@ table 50202 "Distribution Project"
         {
         }
     }
+
     trigger OnDelete()
     begin
-        //UserCustManage.CheckDistRuleExist(Rec."Entry No.");
+        UserCustManage.CheckDistRuleExist(Rec."Entry No.");
     end;
 
     var
         UserCustManage: Codeunit "User Customize Manage";
-
-
-
 }

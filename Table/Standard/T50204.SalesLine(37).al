@@ -37,8 +37,6 @@ tableextension 50204 SalesLineEx extends "Sales Line"
             Caption = 'Contact Name';
         }
     }
-    var
-        Text003: Label 'Contact %1 %2 is not related to customer %3 %4.';
 
     local procedure LookupContactList()
     var
@@ -69,4 +67,7 @@ tableextension 50204 SalesLineEx extends "Sales Line"
         if Cont."Company No." <> ContBusRel."Contact No." then
             Error(Text003, Cont."No.", Cont.Name, Cust."No.", Cust.Name);
     end;
+
+    var
+        Text003: Label 'Contact %1 %2 is not related to customer %3 %4.';
 }

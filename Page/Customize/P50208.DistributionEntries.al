@@ -100,7 +100,6 @@ page 50208 "Distribution Entries"
                     DisRuleFilter: Record "Distribution Rule Filter";
                     GenLedSetup: Record "General Ledger Setup";
                     DisRulePageFilter: Page "Distribution Rule Filter";
-                    UserCustManage: Codeunit "User Customize Manage";
                     GLAccNo: code[20];
                     AssEntryNo: Integer;
                     AppAssEntryNo: Boolean;
@@ -110,6 +109,7 @@ page 50208 "Distribution Entries"
                     Clear(AppAssEntryNo);
                     if Rec.Amount = 0 then
                         exit;
+
                     if Rec."Dist. Entry No Applied" = 0 then begin
                         AssEntryNo := Rec."Entry No.";
                         AppAssEntryNo := true;
@@ -120,61 +120,75 @@ page 50208 "Distribution Entries"
                         Clear(DisRuleFilter);
                         DisRuleFilter.Init();
                         DisRuleFilter."Entry No." := Rec."Entry No.";
-                        DisRuleFilter."Sales Invoice" := UserCustManage.CheckSalesInvoice(Rec."Document No.");
+                        DisRuleFilter."Sales Invoice" := UserCustomizeManage.CheckSalesInvoice(Rec."Document No.");
                         if DisRuleFilter."Sales Invoice" then
-                            if Rec."Dimension Set ID" = 0 then begin
+                            if (Rec."Dimension Set ID" = 0) then begin
                                 GLAccNo := Rec."G/L Account No.";
-                                DisRuleFilter."G/L Amount" := UserCustManage.GetGLCreditAmount(Rec."Document No.", Rec."Global Dimension 2 Code",
+                                DisRuleFilter."G/L Amount" := UserCustomizeManage.GetGLCreditAmount(Rec."Document No.", Rec."Global Dimension 2 Code",
                                              Rec."Global Dimension 1 Code", GLAccNo);
                             end;
-                        if not DisRuleFilter."Sales Invoice" then begin
+
+                        if ((DisRuleFilter."Sales Invoice") = false) then begin
                             GLAccNo := Rec."G/L Account No.";
-                            DisRuleFilter."G/L Amount" := UserCustManage.GetGLDebitAmount(Rec."Document No.", Rec."Global Dimension 2 Code",
+
+                            DisRuleFilter."G/L Amount" := UserCustomizeManage.GetGLDebitAmount(Rec."Document No.", Rec."Global Dimension 2 Code",
                                 Rec."Global Dimension 1 Code", GLAccNo);
                         end;
-                        if Rec."Global Dimension 2 Code" <> '' then begin
+
+                        if (Rec."Global Dimension 2 Code" <> '') then begin
                             GenLedSetup.Get();
                             DisRuleFilter."Dimension Filter Exsist" := true;
                             DisRuleFilter."Dimension Filter" := GenLedSetup."Global Dimension 2 Code";
                             DisRuleFilter."Dimension Value" := Rec."Global Dimension 2 Code";
                         end;
+
+                        if (GLAccNo = '') then
+                            GLAccNo := Rec."G/L Account No.";
+
                         DisRuleFilter."G/L Account No." := GLAccNo;
                         DisRuleFilter.Insert();
-                    end
-                    else begin
-                        DisRuleFilter."Sales Invoice" := UserCustManage.CheckSalesInvoice(Rec."Document No.");
-                        if DisRuleFilter."Sales Invoice" then
-                            if Rec."Dimension Set ID" = 0 then begin
+                    end else begin
+                        DisRuleFilter."Sales Invoice" := UserCustomizeManage.CheckSalesInvoice(Rec."Document No.");
+                        if (DisRuleFilter."Sales Invoice") then
+                            if (Rec."Dimension Set ID" = 0) then begin
                                 GLAccNo := Rec."G/L Account No.";
-                                DisRuleFilter."G/L Amount" := UserCustManage.GetGLCreditAmount(Rec."Document No.", Rec."Global Dimension 2 Code",
+                                DisRuleFilter."G/L Amount" := UserCustomizeManage.GetGLCreditAmount(Rec."Document No.", Rec."Global Dimension 2 Code",
                                              Rec."Global Dimension 1 Code", GLAccNo);
                             end;
-                        if not DisRuleFilter."Sales Invoice" then begin
+
+                        if ((DisRuleFilter."Sales Invoice") = false) then begin
                             GLAccNo := Rec."G/L Account No.";
-                            DisRuleFilter."G/L Amount" := UserCustManage.GetGLDebitAmount(Rec."Document No.", Rec."Global Dimension 2 Code",
+                            DisRuleFilter."G/L Amount" := UserCustomizeManage.GetGLDebitAmount(Rec."Document No.", Rec."Global Dimension 2 Code",
                                 Rec."Global Dimension 1 Code", GLAccNo);
                         end;
-                        if Rec."Global Dimension 2 Code" <> '' then begin
+
+                        if (Rec."Global Dimension 2 Code" <> '') then begin
                             GenLedSetup.Get();
                             DisRuleFilter."Dimension Filter Exsist" := true;
                             DisRuleFilter."Dimension Filter" := GenLedSetup."Global Dimension 2 Code";
                             DisRuleFilter."Dimension Value" := Rec."Global Dimension 2 Code";
                         end;
+
+                        if (GLAccNo = '') then
+                            GLAccNo := Rec."G/L Account No.";
+
                         DisRuleFilter."G/L Account No." := GLAccNo;
                         DisRuleFilter.Modify();
                     end;
-                    if DisRuleFilter."Sales Invoice" then begin
-                        if AppAssEntryNo then
-                            UserCustManage.UpdateGLEntryAppEntryNo(AssEntryNo, Rec."Document No.", '',
-                                '', '');
-                        UserCustManage.InitDistributionProjectLine(AssEntryNo, Rec."Document No.", DisRuleFilter."Negative Allocation",
+
+                    if ((DisRuleFilter."Sales Invoice") = true) then begin
+                        if (AppAssEntryNo) then
+                            UserCustomizeManage.UpdateGLEntryAppEntryNo(AssEntryNo, Rec."Document No.", '',
+                                '', GLAccNo);
+
+                        UserCustomizeManage.InitDistributionProjectLine(AssEntryNo, Rec."Document No.", DisRuleFilter."Negative Allocation",
                             '', '', '');
-                    end
-                    else begin
-                        if AppAssEntryNo then
-                            UserCustManage.UpdateGLEntryAppEntryNo(AssEntryNo, Rec."Document No.", Rec."Global Dimension 2 Code",
+                    end else begin
+                        if (AppAssEntryNo) then
+                            UserCustomizeManage.UpdateGLEntryAppEntryNo(AssEntryNo, Rec."Document No.", Rec."Global Dimension 2 Code",
                                 Rec."Global Dimension 1 Code", GLAccNo);
-                        UserCustManage.InitDistributionProjectLine(AssEntryNo, Rec."Document No.", DisRuleFilter."Negative Allocation",
+
+                        UserCustomizeManage.InitDistributionProjectLine(AssEntryNo, Rec."Document No.", DisRuleFilter."Negative Allocation",
                             Rec."Global Dimension 2 Code", Rec."Global Dimension 1 Code", GLAccNo);
                     end;
                     Commit();
@@ -187,6 +201,28 @@ page 50208 "Distribution Entries"
                     DisRulePageFilter.RunModal();
                 end;
             }
+            action("Copy Distribution Entries")
+            {
+                ApplicationArea = All;
+                Image = Copy;
+                Promoted = true;
+                PromotedCategory = Process;
+                trigger OnAction()
+                var
+                    GLEntry: Record "G/L Entry";
+                begin
+                    GLEntry.Reset();
+                    GLEntry.CalcFields("Account Category");
+                    GLEntry.SetFilter("Account Category", '%1|%2', GLEntry."Account Category"::Income, GLEntry."Account Category"::Expense);
+                    if (GLEntry.FindSet(false) = true) then begin
+                        repeat
+                        // UserCustomizeManage.CopyDistributionRuleValues(GLEntry."Entry No.");
+                        until GLEntry.Next() = 0;
+                        Message('Succesfully Distribution Lines are Copied');
+                    end;
+
+                end;
+            }
         }
     }
     trigger OnOpenPage()
@@ -195,4 +231,7 @@ page 50208 "Distribution Entries"
         Rec.SetFilter("Account Category", '%1|%2', Rec."Account Category"::Income, Rec."Account Category"::Expense);
         Rec.FilterGroup(0);
     end;
+
+    var
+        UserCustomizeManage: Codeunit "User Customize Manage";
 }

@@ -1,14 +1,12 @@
 table 50204 "Distribution Header"
 {
     Caption = 'Distribution Header';
-    DataClassification = ToBeClassified;
 
     fields
     {
-        field(1; "User ID"; Code[50])
+        field(1; "User ID"; Code[10])
         {
             Caption = 'User ID';
-            DataClassification = ToBeClassified;
         }
         field(5; Year; code[20])
         {

@@ -64,13 +64,6 @@ pageextension 50200 DimensionValuesEx extends "Dimension Values"
             }
         }
     }
-    var
-        FieldVisible: Boolean;
-
-    trigger OnOpenPage()
-    begin
-
-    end;
 
     trigger OnAfterGetCurrRecord()
     begin
@@ -85,4 +78,7 @@ pageextension 50200 DimensionValuesEx extends "Dimension Values"
         if GenLedSetup."Global Dimension 1 Code" = Rec."Dimension Code" then
             FieldVisible := true;
     end;
+
+    var
+        FieldVisible: Boolean;
 }

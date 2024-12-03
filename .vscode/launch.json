@@ -6,15 +6,18 @@
             "request": "launch",
             "type": "al",
             "environmentType": "Sandbox",
-            "environmentName": "AzziteTest_07042023",//AzziteTest_07042023 //NewTestDB_20042023
+            // "environmentName": "AzziteTest_07042023",
+            //"environmentName": "NewAzziteTest_06012024",
+            "environmentName": "ESWAR_TESTING",
+            // "environmentName": "Test0910204",
             "startupObjectId": 22,
             "startupObjectType": "Page",
-            "breakOnError": "All",
+            "breakOnError": "All", 
             "launchBrowser": true,
             "enableLongRunningSqlStatements": true,
             "enableSqlInformationDebugger": true,
             "tenant": "ce522da1-e39a-4b8d-913f-e8252abd1bc5",
-            "schemaUpdateMode": "ForceSync"
+            // "schemaUpdateMode": "ForceSync"
         }
     ]
 }
